@@ -4,7 +4,6 @@ import config from "../config";
 
 export default class extends Phaser.State {
   init() {
-    this.stage.backgroundColor = "#EDEEC9";
     this.fontsReady = false;
     this.fontsLoaded = this.fontsLoaded.bind(this);
   }
@@ -27,8 +26,9 @@ export default class extends Phaser.State {
     );
     text.anchor.setTo(0.5, 0.5);
 
-    this.load.image("loaderBg", "./assets/images/loader-bg.png");
+    this.load.image("sky", "./assets/images/sky.png");
     this.load.image("loaderBar", "./assets/images/loader-bar.png");
+    this.load.image("loaderBg", "./assets/images/loader-bg.png");
   }
 
   render() {
@@ -42,5 +42,9 @@ export default class extends Phaser.State {
 
   fontsLoaded() {
     this.fontsReady = true;
+  }
+
+  create() {
+    this.game.physics.startSystem(Phaser.Physics.ARCADE);
   }
 }

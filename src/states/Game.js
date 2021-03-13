@@ -1,14 +1,14 @@
 /* globals __DEV__ */
 import Phaser from "phaser";
 import Mushroom from "../sprites/Mushroom";
-import lang from "../lang";
+import Panda from "../sprites/Panda";
 
 export default class extends Phaser.State {
   init() {}
   preload() {}
 
   create() {
-    const bannerText = lang.text("welcome");
+    const bannerText = "hoiiiiiiiiiiiiiiii";
     let banner = this.add.text(
       this.world.centerX,
       this.game.height - 80,
@@ -23,19 +23,24 @@ export default class extends Phaser.State {
     banner.padding.set(10, 16);
     banner.anchor.setTo(0.5);
 
-    this.mushroom = new Mushroom({
+    this.sky = this.add.sprite(0, 0, "sky");
+
+    this.panda = new Panda({
       game: this.game,
       x: this.world.centerX,
-      y: this.world.centerY,
-      asset: "mushroom",
+      y: this.world.centerY + 100,
+      asset: "panda",
+      scale: 3,
     });
 
-    this.game.add.existing(this.mushroom);
+    this.game.add.existing(this.panda);
+    this.game.physics.arcade.enable(this.panda);
   }
 
   render() {
     if (__DEV__) {
-      this.game.debug.spriteInfo(this.mushroom, 32, 32);
+      // this.game.debug.spriteInfo(this.mushroom, 32, 32);
+      // this.game.debug.spriteInfo(this.panda, 32, 32);
     }
   }
 }

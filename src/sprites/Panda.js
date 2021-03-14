@@ -17,23 +17,55 @@ export default class extends Phaser.Sprite {
   }
 
   update() {
-    if (this.game.input.keyboard.isDown(Phaser.KeyCode.A)) {
+    const lastKey = this.game.input.keyboard.lastKey;    
+    if (this.game.input.keyboard.isDown(Phaser.KeyCode.A) && this.game.input.keyboard.isDown(Phaser.KeyCode.D)) {
+      switch (lastKey.keyCode) {
+        case Phaser.KeyCode.A:
+          this.body.velocity.y = 0;
+          this.body.velocity.x = -160;
+          this.animations.play("left", true);
+          break;
+        case Phaser.KeyCode.D:
+          this.body.velocity.y = 0;
+          this.body.velocity.x = 160;
+          this.animations.play("right", true);
+          break;
+      }
+    } 
+    else if (this.game.input.keyboard.isDown(Phaser.KeyCode.W) && this.game.input.keyboard.isDown(Phaser.KeyCode.S)) {
+      switch (lastKey.keyCode) {
+        case Phaser.KeyCode.W:
+          this.body.velocity.x = 0;
+          this.body.velocity.y = -160;
+          this.animations.play("up", true);
+          break;
+        case Phaser.KeyCode.S:
+          this.body.velocity.x = 0;
+          this.body.velocity.y = 160;
+          this.animations.play("down", true);
+          break;
+      }
+    }
+    else if (this.game.input.keyboard.isDown(Phaser.KeyCode.A)) {
+      this.body.velocity.y = 0;
       this.body.velocity.x = -160;
       this.animations.play("left", true);
     } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.D)) {
+      this.body.velocity.y = 0;
       this.body.velocity.x = 160;
       this.animations.play("right", true);
-    } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.S)) {
-      this.body.velocity.y = 160;
-      this.animations.play("down", true);
     } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.W)) {
+      this.body.velocity.x = 0;
       this.body.velocity.y = -160;
       this.animations.play("up", true);
+    } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.S)) {
+      this.body.velocity.x = 0;
+      this.body.velocity.y = 160;
+      this.animations.play("down", true);
     } else {
       this.body.velocity.x = 0;
       this.body.velocity.y = 0;
 
-      const lastKey = this.game.input.keyboard.lastKey;
       if (lastKey) {
         switch (lastKey.keyCode) {
           case Phaser.KeyCode.W:

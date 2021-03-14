@@ -10783,7 +10783,6 @@ if (window.cordova) {
     //
     // load your assets
     //
-    this.load.image("mushroom", "assets/images/mushroom2.png");
     this.load.image("sky", "assets/images/sky.png");
     this.load.image("ground", "assets/images/platform.png");
     this.load.image("star", "assets/images/star.png");
@@ -10826,10 +10825,8 @@ const centerGameObjects = objects => {
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser__ = __webpack_require__(/*! phaser */ 42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_phaser__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Mushroom__ = __webpack_require__(/*! ../sprites/Mushroom */ 342);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Panda__ = __webpack_require__(/*! ../sprites/Panda */ 343);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Panda__ = __webpack_require__(/*! ../sprites/Panda */ 343);
 /* globals __DEV__ */
-
 
 
 
@@ -10850,7 +10847,7 @@ const centerGameObjects = objects => {
 
     this.sky = this.add.sprite(0, 0, "sky");
 
-    this.panda = new __WEBPACK_IMPORTED_MODULE_2__sprites_Panda__["a" /* default */]({
+    this.panda = new __WEBPACK_IMPORTED_MODULE_1__sprites_Panda__["a" /* default */]({
       game: this.game,
       x: this.world.centerX,
       y: this.world.centerY + 100,
@@ -10864,37 +10861,13 @@ const centerGameObjects = objects => {
 
   render() {
     if (true) {
-      // this.game.debug.spriteInfo(this.mushroom, 32, 32);
-      // this.game.debug.spriteInfo(this.panda, 32, 32);
+      this.game.debug.spriteInfo(this.panda, 32, 32);
     }
   }
 });
 
 /***/ }),
-/* 342 */
-/*!*********************************!*\
-  !*** ./src/sprites/Mushroom.js ***!
-  \*********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser__ = __webpack_require__(/*! phaser */ 42);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_phaser__);
-
-
-/* unused harmony default export */ var _unused_webpack_default_export = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
-  constructor({ game, x, y, asset }) {
-    super(game, x, y, asset);
-    this.anchor.setTo(0.5);
-  }
-
-  update() {
-    this.angle += 1;
-  }
-});
-
-/***/ }),
+/* 342 */,
 /* 343 */
 /*!******************************!*\
   !*** ./src/sprites/Panda.js ***!
@@ -10925,23 +10898,53 @@ const centerGameObjects = objects => {
   }
 
   update() {
-    if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A)) {
+    const lastKey = this.game.input.keyboard.lastKey;
+    if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.D)) {
+      switch (lastKey.keyCode) {
+        case __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A:
+          this.body.velocity.y = 0;
+          this.body.velocity.x = -160;
+          this.animations.play("left", true);
+          break;
+        case __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.D:
+          this.body.velocity.y = 0;
+          this.body.velocity.x = 160;
+          this.animations.play("right", true);
+          break;
+      }
+    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.S)) {
+      switch (lastKey.keyCode) {
+        case __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W:
+          this.body.velocity.x = 0;
+          this.body.velocity.y = -160;
+          this.animations.play("up", true);
+          break;
+        case __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.S:
+          this.body.velocity.x = 0;
+          this.body.velocity.y = 160;
+          this.animations.play("down", true);
+          break;
+      }
+    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A)) {
+      this.body.velocity.y = 0;
       this.body.velocity.x = -160;
       this.animations.play("left", true);
     } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.D)) {
+      this.body.velocity.y = 0;
       this.body.velocity.x = 160;
       this.animations.play("right", true);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.S)) {
-      this.body.velocity.y = 160;
-      this.animations.play("down", true);
     } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W)) {
+      this.body.velocity.x = 0;
       this.body.velocity.y = -160;
       this.animations.play("up", true);
+    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.S)) {
+      this.body.velocity.x = 0;
+      this.body.velocity.y = 160;
+      this.animations.play("down", true);
     } else {
       this.body.velocity.x = 0;
       this.body.velocity.y = 0;
 
-      const lastKey = this.game.input.keyboard.lastKey;
       if (lastKey) {
         switch (lastKey.keyCode) {
           case __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W:

@@ -1,6 +1,5 @@
 /* globals __DEV__ */
 import Phaser from "phaser";
-import Mushroom from "../sprites/Mushroom";
 import Panda from "../sprites/Panda";
 
 export default class extends Phaser.State {
@@ -39,8 +38,7 @@ export default class extends Phaser.State {
 
   render() {
     if (__DEV__) {
-      // this.game.debug.spriteInfo(this.mushroom, 32, 32);
-      // this.game.debug.spriteInfo(this.panda, 32, 32);
+      this.game.debug.spriteInfo(this.panda, 32, 32);
     }
   }
 }

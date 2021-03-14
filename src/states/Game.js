@@ -1,5 +1,6 @@
 /* globals __DEV__ */
 import Phaser from "phaser";
+import Bullet from "../sprites/Bullet";
 import Panda from "../sprites/Panda";
 
 export default class extends Phaser.State {
@@ -7,21 +8,6 @@ export default class extends Phaser.State {
   preload() {}
 
   create() {
-    const bannerText = "hoiiiiiiiiiiiiiiii";
-    let banner = this.add.text(
-      this.world.centerX,
-      this.game.height - 80,
-      bannerText,
-      {
-        font: "40px Bangers",
-        fill: "#77BFA3",
-        smoothed: false,
-      }
-    );
-
-    banner.padding.set(10, 16);
-    banner.anchor.setTo(0.5);
-
     this.sky = this.add.sprite(0, 0, "sky");
 
     this.panda = new Panda({
@@ -36,9 +22,17 @@ export default class extends Phaser.State {
     this.game.physics.arcade.enable(this.panda);
   }
 
+  // update() {
+  //   this.game.pysics.arcade.overlap(this.panda.bullets, this.enemies, this.hitEnemy, null, this)
+  // }
+
+  // hitEnemy(bullet, enemy){
+  // ...
+  // }
+
   render() {
     if (__DEV__) {
-      this.game.debug.spriteInfo(this.panda, 32, 32);
+      this.game.debug.spriteInfo(this.panda, 10, 10);
     }
   }
 }

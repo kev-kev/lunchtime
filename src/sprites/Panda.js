@@ -1,4 +1,7 @@
 import Phaser from "phaser";
+import Bullet from "./Bullet";
+
+const speed = 180;
 
 export default class extends Phaser.Sprite {
   constructor({ game, x, y, asset, frame, scale }) {
@@ -6,10 +9,10 @@ export default class extends Phaser.Sprite {
     this.anchor.setTo(0.5);
     this.scale.setTo(scale);
     this.game = game;
-    this.animations.add("turnLeft", [4], 20);
-    this.animations.add("turnRight", [7], 20);
-    this.animations.add("turnUp", [10], 20);
-    this.animations.add("turnDown", [1], 20);
+    this.animations.add("turnLeft", [4], 1);
+    this.animations.add("turnRight", [7], 1);
+    this.animations.add("turnUp", [10], 1);
+    this.animations.add("turnDown", [1], 1);
     this.animations.add("left", [3, 4, 5], 10);
     this.animations.add("right", [6, 7, 8], 10);
     this.animations.add("up", [9, 10, 11], 10);
@@ -17,50 +20,82 @@ export default class extends Phaser.Sprite {
   }
 
   update() {
-    const lastKey = this.game.input.keyboard.lastKey;    
-    if (this.game.input.keyboard.isDown(Phaser.KeyCode.A) && this.game.input.keyboard.isDown(Phaser.KeyCode.D)) {
+    const lastKey = this.game.input.keyboard.lastKey;
+    if (
+      this.game.input.keyboard.isDown(Phaser.KeyCode.A) &&
+      this.game.input.keyboard.isDown(Phaser.KeyCode.D)
+    ) {
       switch (lastKey.keyCode) {
         case Phaser.KeyCode.A:
           this.body.velocity.y = 0;
-          this.body.velocity.x = -160;
+          this.body.velocity.x = -speed;
           this.animations.play("left", true);
           break;
         case Phaser.KeyCode.D:
           this.body.velocity.y = 0;
-          this.body.velocity.x = 160;
+          this.body.velocity.x = speed;
           this.animations.play("right", true);
           break;
       }
-    } 
-    else if (this.game.input.keyboard.isDown(Phaser.KeyCode.W) && this.game.input.keyboard.isDown(Phaser.KeyCode.S)) {
+    } else if (
+      this.game.input.keyboard.isDown(Phaser.KeyCode.W) &&
+      this.game.input.keyboard.isDown(Phaser.KeyCode.S)
+    ) {
       switch (lastKey.keyCode) {
         case Phaser.KeyCode.W:
           this.body.velocity.x = 0;
-          this.body.velocity.y = -160;
+          this.body.velocity.y = -speed;
           this.animations.play("up", true);
           break;
         case Phaser.KeyCode.S:
           this.body.velocity.x = 0;
-          this.body.velocity.y = 160;
+          this.body.velocity.y = speed;
           this.animations.play("down", true);
           break;
       }
-    }
-    else if (this.game.input.keyboard.isDown(Phaser.KeyCode.A)) {
+    } else if (
+      this.game.input.keyboard.isDown(Phaser.KeyCode.A) &&
+      this.game.input.keyboard.isDown(Phaser.KeyCode.W)
+    ) {
+      this.body.velocity.x = -speed;
+      this.body.velocity.y = -speed;
+      this.animations.play("left", true);
+    } else if (
+      this.game.input.keyboard.isDown(Phaser.KeyCode.A) &&
+      this.game.input.keyboard.isDown(Phaser.KeyCode.S)
+    ) {
+      this.body.velocity.x = -speed;
+      this.body.velocity.y = speed;
+      this.animations.play("left", true);
+    } else if (
+      this.game.input.keyboard.isDown(Phaser.KeyCode.D) &&
+      this.game.input.keyboard.isDown(Phaser.KeyCode.W)
+    ) {
+      this.body.velocity.x = speed;
+      this.body.velocity.y = -speed;
+      this.animations.play("right", true);
+    } else if (
+      this.game.input.keyboard.isDown(Phaser.KeyCode.D) &&
+      this.game.input.keyboard.isDown(Phaser.KeyCode.S)
+    ) {
+      this.body.velocity.x = speed;
+      this.body.velocity.y = speed;
+      this.animations.play("right", true);
+    } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.A)) {
       this.body.velocity.y = 0;
-      this.body.velocity.x = -160;
+      this.body.velocity.x = -speed;
       this.animations.play("left", true);
     } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.D)) {
       this.body.velocity.y = 0;
-      this.body.velocity.x = 160;
+      this.body.velocity.x = speed;
       this.animations.play("right", true);
     } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.W)) {
       this.body.velocity.x = 0;
-      this.body.velocity.y = -160;
+      this.body.velocity.y = -speed;
       this.animations.play("up", true);
     } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.S)) {
       this.body.velocity.x = 0;
-      this.body.velocity.y = 160;
+      this.body.velocity.y = speed;
       this.animations.play("down", true);
     } else {
       this.body.velocity.x = 0;
@@ -86,5 +121,37 @@ export default class extends Phaser.Sprite {
         }
       }
     }
+    if (this.game.input.keyboard.isDown(Phaser.KeyCode.UP)) {
+      this.shoot();
+    }
+  }
+
+  shoot() {
+    console.log("shoot");
+    const bullet = new Bullet({
+      game: this.game,
+      x: this.x,
+      y: this.y + 50,
+      // health: 3,
+    });
+    console.log(bullet);
+    this.game.add.existing(bullet);
+    // this.shotSound.play(...);
+    // let bullet = this.bullets.getFirstExists(false);
+    // if (!bullet) {
+    //     bullet = new Bullet({
+    //         game: this.game,
+    //         x: this.x,
+    //         y: this.y,
+    //         // health: 3,
+    //         asset: 'bullet',
+    //     });
+    //     this.bullets.add(bullet);
+    // }
+    // else {
+    //     bullet.reset(this.x, this.y, 3);
+    // }
+
+    // bullet.body.velocity.y = this.bulletSpeed;
   }
 }

@@ -20,6 +20,7 @@ export default class extends Phaser.State {
 
     this.game.add.existing(this.panda);
     this.game.physics.arcade.enable(this.panda);
+
   }
 
   // update() {
@@ -32,7 +33,8 @@ export default class extends Phaser.State {
 
   render() {
     if (__DEV__) {
-      this.game.debug.spriteInfo(this.panda, 10, 10);
+      // this.game.debug.spriteInfo(this.panda, 10, 10);
+      // this.game.debug.spriteInfo(this.bullet, 10, 10)
     }
   }
 }

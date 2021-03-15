@@ -17,6 +17,8 @@ export default class extends Phaser.Sprite {
     this.animations.add("right", [6, 7, 8], 10);
     this.animations.add("up", [9, 10, 11], 10);
     this.animations.add("down", [0, 1, 2], 10);
+    this.bullets = this.game.add.group();
+    this.bullets.enableBody = true;
   }
 
   update() {
@@ -127,15 +129,16 @@ export default class extends Phaser.Sprite {
   }
 
   shoot() {
-    console.log("shoot");
+    console.log("pew");
     const bullet = new Bullet({
       game: this.game,
       x: this.x,
       y: this.y + 50,
-      // health: 3,
     });
-    console.log(bullet);
-    this.game.add.existing(bullet);
+    this.bullets.add(bullet);
+    this.game.debug.spriteInfo(bullet, 10, 10)
+    
+
     // this.shotSound.play(...);
     // let bullet = this.bullets.getFirstExists(false);
     // if (!bullet) {
@@ -152,6 +155,6 @@ export default class extends Phaser.Sprite {
     //     bullet.reset(this.x, this.y, 3);
     // }
 
-    // bullet.body.velocity.y = this.bulletSpeed;
+    bullet.body.velocity.y = 250;
   }
 }

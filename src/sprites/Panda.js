@@ -139,17 +139,34 @@ export default class extends Phaser.Sprite {
       this.position.y = 0.88 * this.game.world.height;
     }
 
-    if (this.game.input.keyboard.isDown(Phaser.KeyCode.UP)) {
-      this.shoot("up", 250);
-    }
-    if (this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)) {
-      this.shoot("down", 250);
-    }
-    if (this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT)) {
-      this.shoot("left", 250);
-    }
-    if (this.game.input.keyboard.isDown(Phaser.KeyCode.RIGHT)) {
-      this.shoot("right", 250);
+    if (
+      this.game.input.keyboard.isDown(Phaser.KeyCode.RIGHT) &&
+      this.game.input.keyboard.isDown(Phaser.KeyCode.UP)
+    ) {
+      this.shoot("ur", 250);
+    } else if (
+      this.game.input.keyboard.isDown(Phaser.KeyCode.RIGHT) &&
+      this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)
+    ) {
+      this.shoot("dr", 250);
+    } else if (
+      this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT) &&
+      this.game.input.keyboard.isDown(Phaser.KeyCode.UP)
+    ) {
+      this.shoot("ul", 250);
+    } else if (
+      this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN) &&
+      this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT)
+    ) {
+      this.shoot("dl", 250);
+    } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.UP)) {
+      this.shoot("u", 250);
+    } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)) {
+      this.shoot("d", 250);
+    } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT)) {
+      this.shoot("l", 250);
+    } else if (this.game.input.keyboard.isDown(Phaser.KeyCode.RIGHT)) {
+      this.shoot("r", 250);
     }
   }
 
@@ -164,17 +181,33 @@ export default class extends Phaser.Sprite {
     this.bullets.add(bullet);
     this.game.debug.spriteInfo(bullet, 10, 10);
     switch (dir) {
-      case "up":
+      case "u":
         bullet.body.velocity.y = -speed;
         break;
-      case "down":
+      case "d":
         bullet.body.velocity.y = speed;
         break;
-      case "left":
+      case "l":
         bullet.body.velocity.x = -speed;
         break;
-      case "right":
+      case "r":
         bullet.body.velocity.x = speed;
+        break;
+      case "ur":
+        bullet.body.velocity.x = speed;
+        bullet.body.velocity.y = -speed;
+        break;
+      case "ul":
+        bullet.body.velocity.x = -speed;
+        bullet.body.velocity.y = -speed;
+        break;
+      case "dr":
+        bullet.body.velocity.x = speed;
+        bullet.body.velocity.y = speed;
+        break;
+      case "dl":
+        bullet.body.velocity.x = -speed;
+        bullet.body.velocity.y = speed;
         break;
     }
   }

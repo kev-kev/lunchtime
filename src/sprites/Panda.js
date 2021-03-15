@@ -124,37 +124,42 @@ export default class extends Phaser.Sprite {
       }
     }
     if (this.game.input.keyboard.isDown(Phaser.KeyCode.UP)) {
-      this.shoot();
+      this.shoot("up", 250);
+    }
+    if (this.game.input.keyboard.isDown(Phaser.KeyCode.DOWN)) {
+      this.shoot("down", 250);
+    }
+    if (this.game.input.keyboard.isDown(Phaser.KeyCode.LEFT)) {
+      this.shoot("left", 250);
+    }
+    if (this.game.input.keyboard.isDown(Phaser.KeyCode.RIGHT)) {
+      this.shoot("right", 250);
     }
   }
 
-  shoot() {
+  shoot(dir, speed) {
     console.log("pew");
     const bullet = new Bullet({
       game: this.game,
       x: this.x,
-      y: this.y + 50,
+      y: this.y,
+      health: 1,
     });
     this.bullets.add(bullet);
-    this.game.debug.spriteInfo(bullet, 10, 10)
-    
-
-    // this.shotSound.play(...);
-    // let bullet = this.bullets.getFirstExists(false);
-    // if (!bullet) {
-    //     bullet = new Bullet({
-    //         game: this.game,
-    //         x: this.x,
-    //         y: this.y,
-    //         // health: 3,
-    //         asset: 'bullet',
-    //     });
-    //     this.bullets.add(bullet);
-    // }
-    // else {
-    //     bullet.reset(this.x, this.y, 3);
-    // }
-
-    bullet.body.velocity.y = 250;
+    this.game.debug.spriteInfo(bullet, 10, 10);
+    switch (dir) {
+      case "up":
+        bullet.body.velocity.y = -speed;
+        break;
+      case "down":
+        bullet.body.velocity.y = speed;
+        break;
+      case "left":
+        bullet.body.velocity.x = -speed;
+        break;
+      case "right":
+        bullet.body.velocity.x = speed;
+        break;
+    }
   }
 }

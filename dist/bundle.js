@@ -4271,12 +4271,15 @@ module.exports = Math.scale || function scale(x, inLow, inHigh, outLow, outHigh)
 
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
-  constructor({ game, x, y, frame, scale }) {
+  constructor({ game, x, y, frame, health, scale }) {
     super(game, x, y, "bullet", frame);
     this.anchor.setTo(0.5);
     this.scale.setTo(2);
     this.game = game;
     this.frame = 13;
+    this.health = health;
+    this.checkWorldBounds = true;
+    this.outOfBoundsKill = true;
   }
 });
 
@@ -11013,37 +11016,43 @@ const speed = 180;
       }
     }
     if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.UP)) {
-      this.shoot();
+      this.shoot("up", 250);
+    }
+    if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.DOWN)) {
+      this.shoot("down", 250);
+    }
+    if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.LEFT)) {
+      this.shoot("left", 250);
+    }
+    if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.RIGHT)) {
+      this.shoot("right", 250);
     }
   }
 
-  shoot() {
+  shoot(dir, speed) {
     console.log("pew");
     const bullet = new __WEBPACK_IMPORTED_MODULE_1__Bullet__["a" /* default */]({
       game: this.game,
       x: this.x,
-      y: this.y + 50
+      y: this.y,
+      health: 1
     });
     this.bullets.add(bullet);
     this.game.debug.spriteInfo(bullet, 10, 10);
-
-    // this.shotSound.play(...);
-    // let bullet = this.bullets.getFirstExists(false);
-    // if (!bullet) {
-    //     bullet = new Bullet({
-    //         game: this.game,
-    //         x: this.x,
-    //         y: this.y,
-    //         // health: 3,
-    //         asset: 'bullet',
-    //     });
-    //     this.bullets.add(bullet);
-    // }
-    // else {
-    //     bullet.reset(this.x, this.y, 3);
-    // }
-
-    bullet.body.velocity.y = 250;
+    switch (dir) {
+      case "up":
+        bullet.body.velocity.y = -speed;
+        break;
+      case "down":
+        bullet.body.velocity.y = speed;
+        break;
+      case "left":
+        bullet.body.velocity.x = -speed;
+        break;
+      case "right":
+        bullet.body.velocity.x = speed;
+        break;
+    }
   }
 });
 

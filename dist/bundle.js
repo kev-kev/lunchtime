@@ -10994,7 +10994,6 @@ const speed = 180;
     } else {
       this.body.velocity.x = 0;
       this.body.velocity.y = 0;
-
       if (lastKey) {
         switch (lastKey.keyCode) {
           case __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W:
@@ -11015,6 +11014,23 @@ const speed = 180;
         }
       }
     }
+    // if the x or y position are negative or excede the world x or y,
+    // set them equal to the upper/lower limit
+    // console.log(this.position.x, this.position.y, this.world.x, this.world.y)
+    if (this.position.x < 27) {
+      this.position.x = 27;
+    }
+    // console.log(this.game.world.height)
+    if (this.position.x > 0.96 * this.game.world.width) {
+      this.position.x = 0.96 * this.game.world.width;
+    }
+    if (this.position.y < 28) {
+      this.position.y = 28;
+    }
+    if (this.position.y > 0.88 * this.game.world.height) {
+      this.position.y = 0.88 * this.game.world.height;
+    }
+
     if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.UP)) {
       this.shoot("up", 250);
     }

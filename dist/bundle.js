@@ -10807,15 +10807,11 @@ if (window.cordova) {
     Object(__WEBPACK_IMPORTED_MODULE_1__utils__["a" /* centerGameObjects */])([this.loaderBg, this.loaderBar]);
 
     this.load.setPreloadSprite(this.loaderBar);
-    //
-    // load your assets
-    //
-    this.load.image("sky", "assets/images/sky.png");
     this.load.image("ground", "assets/images/platform.png");
     this.load.image("star", "assets/images/star.png");
     this.load.image("bomb", "assets/images/bomb.png");
     this.load.spritesheet("bullet", "assets/images/Shooter_SpriteSheet.png", 16.3, 16.5);
-    this.load.spritesheet("panda", "assets/images/panda.png", 32, 32);
+    this.load.spritesheet("player", "assets/images/panda.png", 32, 32);
   }
 
   create() {
@@ -10854,7 +10850,7 @@ const centerGameObjects = objects => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser__ = __webpack_require__(/*! phaser */ 42);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_phaser__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Bullet__ = __webpack_require__(/*! ../sprites/Bullet */ 130);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Panda__ = __webpack_require__(/*! ../sprites/Panda */ 343);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Player__ = __webpack_require__(/*! ../sprites/Player */ 345);
 /* globals __DEV__ */
 
 
@@ -10867,20 +10863,20 @@ const centerGameObjects = objects => {
   create() {
     this.sky = this.add.sprite(0, 0, "sky");
 
-    this.panda = new __WEBPACK_IMPORTED_MODULE_2__sprites_Panda__["a" /* default */]({
+    this.player = new __WEBPACK_IMPORTED_MODULE_2__sprites_Player__["a" /* default */]({
       game: this.game,
       x: this.world.centerX,
       y: this.world.centerY + 100,
-      asset: "panda",
+      asset: "player",
       scale: 3
     });
 
-    this.game.add.existing(this.panda);
-    this.game.physics.arcade.enable(this.panda);
+    this.game.add.existing(this.player);
+    this.game.physics.arcade.enable(this.player);
   }
 
   // update() {
-  //   this.game.pysics.arcade.overlap(this.panda.bullets, this.enemies, this.hitEnemy, null, this)
+  //   this.game.pysics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this)
   // }
 
   // hitEnemy(bullet, enemy){
@@ -10889,17 +10885,19 @@ const centerGameObjects = objects => {
 
   render() {
     if (true) {
-      // this.game.debug.spriteInfo(this.panda, 10, 10);
+      // this.game.debug.spriteInfo(this.player, 10, 10);
       // this.game.debug.spriteInfo(this.bullet, 10, 10)
     }
   }
 });
 
 /***/ }),
-/* 343 */
-/*!******************************!*\
-  !*** ./src/sprites/Panda.js ***!
-  \******************************/
+/* 343 */,
+/* 344 */,
+/* 345 */
+/*!*******************************!*\
+  !*** ./src/sprites/Player.js ***!
+  \*******************************/
 /*! exports provided: default */
 /*! exports used: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -10911,9 +10909,10 @@ const centerGameObjects = objects => {
 
 
 
-const speed = 180;
+const playerSpeed = 180;
+const fireRate = 500; // higher = slower 
 let bulletTime = 0;
-const fireRate = 50;
+let bulletSpeed = 250;
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
   constructor({ game, x, y, asset, frame, scale }) {
@@ -10935,8 +10934,17 @@ const fireRate = 50;
   }
 
   update() {
+    const moveLeft = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A);
+    const moveRight = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.D);
+    const moveUp = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W);
+    const moveDown = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.S);
+    const shootLeft = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.LEFT);
+    const shootRight = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.RIGHT);
+    const shootUp = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.UP);
+    const shootDown = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.DOWN);
     const lastKey = this.game.input.keyboard.lastKey;
-    if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.D)) {
+
+    if (moveLeft && moveRight) {
       switch (lastKey.keyCode) {
         case __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A:
           this.body.velocity.y = 0;
@@ -10949,7 +10957,7 @@ const fireRate = 50;
           this.animations.play("turnRight", true);
           break;
       }
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.S)) {
+    } else if (moveUp && moveDown) {
       switch (lastKey.keyCode) {
         case __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W:
           this.body.velocity.x = 0;
@@ -10962,37 +10970,37 @@ const fireRate = 50;
           this.animations.play("turnDown", true);
           break;
       }
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W)) {
-      this.body.velocity.x = -speed;
-      this.body.velocity.y = -speed;
+    } else if (moveLeft && moveUp) {
+      this.body.velocity.x = -playerSpeed;
+      this.body.velocity.y = -playerSpeed;
       this.animations.play("left", true);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.S)) {
-      this.body.velocity.x = -speed;
-      this.body.velocity.y = speed;
+    } else if (moveLeft && moveDown) {
+      this.body.velocity.x = -playerSpeed;
+      this.body.velocity.y = playerSpeed;
       this.animations.play("left", true);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.D) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W)) {
-      this.body.velocity.x = speed;
-      this.body.velocity.y = -speed;
+    } else if (moveRight && moveUp) {
+      this.body.velocity.x = playerSpeed;
+      this.body.velocity.y = -playerSpeed;
       this.animations.play("right", true);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.D) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.S)) {
-      this.body.velocity.x = speed;
-      this.body.velocity.y = speed;
+    } else if (moveRight && moveDown) {
+      this.body.velocity.x = playerSpeed;
+      this.body.velocity.y = playerSpeed;
       this.animations.play("right", true);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A)) {
+    } else if (moveLeft) {
       this.body.velocity.y = 0;
-      this.body.velocity.x = -speed;
+      this.body.velocity.x = -playerSpeed;
       this.animations.play("left", true);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.D)) {
+    } else if (moveRight) {
       this.body.velocity.y = 0;
-      this.body.velocity.x = speed;
+      this.body.velocity.x = playerSpeed;
       this.animations.play("right", true);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W)) {
+    } else if (moveUp) {
       this.body.velocity.x = 0;
-      this.body.velocity.y = -speed;
+      this.body.velocity.y = -playerSpeed;
       this.animations.play("up", true);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.S)) {
+    } else if (moveDown) {
       this.body.velocity.x = 0;
-      this.body.velocity.y = speed;
+      this.body.velocity.y = playerSpeed;
       this.animations.play("down", true);
     } else {
       this.body.velocity.x = 0;
@@ -11030,26 +11038,26 @@ const fireRate = 50;
       this.position.y = 0.88 * this.game.world.height;
     }
 
-    if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.RIGHT) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.UP)) {
+    if (shootRight && shootUp) {
       this.shoot("ur", 250);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.RIGHT) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.DOWN)) {
+    } else if (shootRight && shootDown) {
       this.shoot("dr", 250);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.LEFT) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.UP)) {
+    } else if (shootLeft && shootUp) {
       this.shoot("ul", 250);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.DOWN) && this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.LEFT)) {
+    } else if (shootDown && shootLeft) {
       this.shoot("dl", 250);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.UP)) {
+    } else if (shootUp) {
       this.shoot("u", 250);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.DOWN)) {
+    } else if (shootDown) {
       this.shoot("d", 250);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.LEFT)) {
+    } else if (shootLeft) {
       this.shoot("l", 250);
-    } else if (this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.RIGHT)) {
+    } else if (shootRight) {
       this.shoot("r", 250);
     }
   }
 
-  shoot(dir, speed) {
+  shoot(dir) {
     if (this.game.time.now > bulletTime) {
       const bullet = new __WEBPACK_IMPORTED_MODULE_1__Bullet__["a" /* default */]({
         game: this.game,
@@ -11059,32 +11067,32 @@ const fireRate = 50;
       this.bullets.add(bullet);
       switch (dir) {
         case "u":
-          bullet.body.velocity.y = -speed;
+          bullet.body.velocity.y = -bulletSpeed;
           break;
         case "d":
-          bullet.body.velocity.y = speed;
+          bullet.body.velocity.y = bulletSpeed;
           break;
         case "l":
-          bullet.body.velocity.x = -speed;
+          bullet.body.velocity.x = -bulletSpeed;
           break;
         case "r":
-          bullet.body.velocity.x = speed;
+          bullet.body.velocity.x = bulletSpeed;
           break;
         case "ur":
-          bullet.body.velocity.x = speed;
-          bullet.body.velocity.y = -speed;
+          bullet.body.velocity.x = bulletSpeed;
+          bullet.body.velocity.y = -bulletSpeed;
           break;
         case "ul":
-          bullet.body.velocity.x = -speed;
-          bullet.body.velocity.y = -speed;
+          bullet.body.velocity.x = -bulletSpeed;
+          bullet.body.velocity.y = -bulletSpeed;
           break;
         case "dr":
-          bullet.body.velocity.x = speed;
-          bullet.body.velocity.y = speed;
+          bullet.body.velocity.x = bulletSpeed;
+          bullet.body.velocity.y = bulletSpeed;
           break;
         case "dl":
-          bullet.body.velocity.x = -speed;
-          bullet.body.velocity.y = speed;
+          bullet.body.velocity.x = -bulletSpeed;
+          bullet.body.velocity.y = bulletSpeed;
           break;
       }
       bulletTime = game.time.now + fireRate;

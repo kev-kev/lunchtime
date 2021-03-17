@@ -2,16 +2,18 @@ import Phaser from "phaser";
 import Bullet from "./Bullet";
 
 const playerSpeed = 180;
-const fireRate = 500; // higher = slower 
+const fireRate = 500; // higher = slower
 let bulletTime = 0;
 let bulletSpeed = 250;
 
 export default class extends Phaser.Sprite {
-  constructor({ game, x, y, asset, frame, scale }) {
+  constructor({ game, x, y, asset, frame }) {
     super(game, x, y, asset, frame);
     this.anchor.setTo(0.5);
-    this.scale.setTo(scale);
+    this.scale.setTo(3);
     this.game = game;
+    this.bullets = this.game.add.group();
+    this.bullets.enableBody = true;
     this.animations.add("turnLeft", [4], 1);
     this.animations.add("turnRight", [7], 1);
     this.animations.add("turnUp", [10], 1);
@@ -20,8 +22,6 @@ export default class extends Phaser.Sprite {
     this.animations.add("right", [6, 7, 8], 10);
     this.animations.add("up", [9, 10, 11], 10);
     this.animations.add("down", [0, 1, 2], 10);
-    this.bullets = this.game.add.group();
-    this.bullets.enableBody = true;
     this.health = 3;
   }
 
@@ -130,25 +130,13 @@ export default class extends Phaser.Sprite {
       this.position.y = 0.88 * this.game.world.height;
     }
 
-    if (
-      shootRight &&
-      shootUp
-    ) {
+    if (shootRight && shootUp) {
       this.shoot("ur", 250);
-    } else if (
-      shootRight &&
-      shootDown
-    ) {
+    } else if (shootRight && shootDown) {
       this.shoot("dr", 250);
-    } else if (
-      shootLeft &&
-      shootUp
-    ) {
+    } else if (shootLeft && shootUp) {
       this.shoot("ul", 250);
-    } else if (
-      shootDown &&
-      shootLeft
-    ) {
+    } else if (shootDown && shootLeft) {
       this.shoot("dl", 250);
     } else if (shootUp) {
       this.shoot("u", 250);
@@ -167,6 +155,7 @@ export default class extends Phaser.Sprite {
         game: this.game,
         x: this.x,
         y: this.y,
+        health: 1
       });
       this.bullets.add(bullet);
       switch (dir) {
@@ -202,4 +191,8 @@ export default class extends Phaser.Sprite {
       bulletTime = game.time.now + fireRate;
     }
   }
+
+  damage(amount) {
+    super.damage(amount);
+  } 
 }

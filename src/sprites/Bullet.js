@@ -7,7 +7,7 @@ export default class extends Phaser.Sprite {
     this.scale.setTo(1);
     this.game = game;
     this.frame = 13;
-    this.health = 1;
+    this.health = health;
     this.checkWorldBounds = true;
     this.outOfBoundsKill = true;
   }

@@ -15,12 +15,9 @@ export default class extends Phaser.State {
       this.game.world.centerY,
       "loaderBar"
     );
-    centerGameObjects([this.loaderBg, this.loaderBar]);
 
+    centerGameObjects([this.loaderBg, this.loaderBar]);
     this.load.setPreloadSprite(this.loaderBar);
-    this.load.image("ground", "assets/images/platform.png");
-    this.load.image("star", "assets/images/star.png");
-    this.load.image("bomb", "assets/images/bomb.png");
     this.load.spritesheet(
       "bullet",
       "assets/images/Shooter_SpriteSheet.png",
@@ -28,6 +25,7 @@ export default class extends Phaser.State {
       16.5
     );
     this.load.spritesheet("player", "assets/images/panda.png", 32, 32);
+    this.load.spritesheet("pumpkin", "assets/images/pumpkin.png", 32, 32);
   }
 
   create() {

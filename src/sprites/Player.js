@@ -1,7 +1,7 @@
 import Phaser from "phaser";
 import Bullet from "./Bullet";
 
-const PLAYER_SPEED = 180;
+const PLAYER_SPEED = 200;
 const FIRE_RATE = 500; // higher = slower
 let bulletTimer = 0;
 
@@ -15,6 +15,7 @@ export default class extends Phaser.Sprite {
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;
     this.health = 3;
+    
   }
 
   addAnimations() {
@@ -22,20 +23,20 @@ export default class extends Phaser.Sprite {
     this.animations.add("turnRight", [7], 1);
     this.animations.add("turnUp", [10], 1);
     this.animations.add("turnDown", [1], 1);
-    this.animations.add("left", [3, 4, 5], 10);
-    this.animations.add("right", [6, 7, 8], 10);
-    this.animations.add("up", [9, 10, 11], 10);
-    this.animations.add("down", [0, 1, 2], 10);
+    this.animations.add("moveLeft", [3, 4, 5], 10);
+    this.animations.add("moveRight", [6, 7, 8], 10);
+    this.animations.add("moveUp", [9, 10, 11], 10);
+    this.animations.add("moveDown", [0, 1, 2], 10);
   }
 
   update() {
     this.setBoundaries();
-    this.listenForMovement();
+    this.listenForMove();
     this.listenForShoot();
     this.body.setSize(18, 25, 8, 7);
   }
 
-  listenForMovement() {
+  listenForMove() {
     const moveUp = this.game.input.keyboard.isDown(Phaser.KeyCode.W);
     const moveLeft = this.game.input.keyboard.isDown(Phaser.KeyCode.A);
     const moveDown = this.game.input.keyboard.isDown(Phaser.KeyCode.S);
@@ -55,7 +56,7 @@ export default class extends Phaser.Sprite {
       } else {
         this.setVelocity(-PLAYER_SPEED, 0);
       }
-      this.animations.play("left");
+      this.animations.play("moveLeft");
     } else if (moveRight) {
       if (moveUp) {
         this.setVelocity(PLAYER_SPEED, -PLAYER_SPEED);
@@ -64,13 +65,13 @@ export default class extends Phaser.Sprite {
       } else {
         this.setVelocity(PLAYER_SPEED, 0);
       }
-      this.animations.play("right");
+      this.animations.play("moveRight");
     } else if (moveUp) {
       this.setVelocity(0, -PLAYER_SPEED);
-      this.animations.play("up");
+      this.animations.play("moveUp");
     } else if (moveDown) {
       this.setVelocity(0, PLAYER_SPEED);
-      this.animations.play("down");
+      this.animations.play("moveDown");
     } else {
       this.setVelocity(0, 0);
       if (lastKey) {

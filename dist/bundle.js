@@ -10929,7 +10929,7 @@ const centerGameObjects = objects => {
     this.game.physics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this);
     this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
     if (this.player.alive && this.enemies.getFirstAlive()) {
-      this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 100);
+      this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 80);
     }
   }
 
@@ -10952,8 +10952,10 @@ const centerGameObjects = objects => {
     let enemy = this.enemies.getFirstAlive();
     this.game.debug.start(32, 32);
     enemy && this.game.debug.line(`Health: ${enemy.health}/${enemy.maxHealth}`);
+
     this.game.debug.body(this.player, null, false);
     this.game.debug.body(enemy, null, false);
+    this.game.debug.spriteInfo(enemy, 32, 50);
   }
 });
 
@@ -10973,7 +10975,7 @@ const centerGameObjects = objects => {
 
 
 
-const PLAYER_SPEED = 180;
+const PLAYER_SPEED = 200;
 const FIRE_RATE = 500; // higher = slower
 let bulletTimer = 0;
 
@@ -10994,20 +10996,20 @@ let bulletTimer = 0;
     this.animations.add("turnRight", [7], 1);
     this.animations.add("turnUp", [10], 1);
     this.animations.add("turnDown", [1], 1);
-    this.animations.add("left", [3, 4, 5], 10);
-    this.animations.add("right", [6, 7, 8], 10);
-    this.animations.add("up", [9, 10, 11], 10);
-    this.animations.add("down", [0, 1, 2], 10);
+    this.animations.add("moveLeft", [3, 4, 5], 10);
+    this.animations.add("moveRight", [6, 7, 8], 10);
+    this.animations.add("moveUp", [9, 10, 11], 10);
+    this.animations.add("moveDown", [0, 1, 2], 10);
   }
 
   update() {
     this.setBoundaries();
-    this.listenForMovement();
+    this.listenForMove();
     this.listenForShoot();
     this.body.setSize(18, 25, 8, 7);
   }
 
-  listenForMovement() {
+  listenForMove() {
     const moveUp = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.W);
     const moveLeft = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.A);
     const moveDown = this.game.input.keyboard.isDown(__WEBPACK_IMPORTED_MODULE_0_phaser___default.a.KeyCode.S);
@@ -11027,7 +11029,7 @@ let bulletTimer = 0;
       } else {
         this.setVelocity(-PLAYER_SPEED, 0);
       }
-      this.animations.play("left");
+      this.animations.play("moveLeft");
     } else if (moveRight) {
       if (moveUp) {
         this.setVelocity(PLAYER_SPEED, -PLAYER_SPEED);
@@ -11036,13 +11038,13 @@ let bulletTimer = 0;
       } else {
         this.setVelocity(PLAYER_SPEED, 0);
       }
-      this.animations.play("right");
+      this.animations.play("moveRight");
     } else if (moveUp) {
       this.setVelocity(0, -PLAYER_SPEED);
-      this.animations.play("up");
+      this.animations.play("moveUp");
     } else if (moveDown) {
       this.setVelocity(0, PLAYER_SPEED);
-      this.animations.play("down");
+      this.animations.play("moveDown");
     } else {
       this.setVelocity(0, 0);
       if (lastKey) {
@@ -11147,6 +11149,8 @@ let bulletTimer = 0;
 
 
 
+const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
+
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
   constructor({ game, x, y, asset, frame, health }) {
     super(game, x, y, asset, frame);
@@ -11157,14 +11161,41 @@ let bulletTimer = 0;
     this.bullets.enableBody = true;
     this.health = health;
     this.maxHealth = health;
+    this.addAnimations();
+  }
+
+  addAnimations() {
     this.animations.add("turnLeft", [4], 1);
     this.animations.add("turnRight", [7], 1);
     this.animations.add("turnUp", [10], 1);
     this.animations.add("turnDown", [1], 1);
-    this.animations.add("left", [3, 4, 5], 10);
-    this.animations.add("right", [6, 7, 8], 10);
-    this.animations.add("up", [9, 10, 11], 10);
-    this.animations.add("down", [0, 1, 2], 10);
+    this.animations.add("moveLeft", [3, 4, 5], 5);
+    this.animations.add("moveRight", [6, 7, 8], 5);
+    this.animations.add("moveUp", [9, 10, 11], 5);
+    this.animations.add("moveDown", [0, 1, 2], 5);
+  }
+
+  update() {
+    this.listenForMove();
+    this.body.setSize(25, 32, 4);
+  }
+
+  listenForMove() {
+    if (this.body.deltaY() > 0) {
+      this.setDiagonalMovement("moveDown");
+    } else if (this.body.deltaY() < 0) {
+      this.setDiagonalMovement("moveUp");
+    }
+  }
+
+  setDiagonalMovement(verticalMovement) {
+    if (this.body.deltaX() > -DIAGONAL_TOLERANCE && this.body.deltaX() < DIAGONAL_TOLERANCE) {
+      this.animations.play(verticalMovement);
+    } else if (this.body.deltaX() > 0) {
+      this.animations.play("moveRight");
+    } else if (this.body.deltaX() < 0) {
+      this.animations.play("moveLeft");
+    }
   }
 });
 

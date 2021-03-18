@@ -3,8 +3,7 @@ import Bullet from "./Bullet";
 
 const PLAYER_SPEED = 180;
 const FIRE_RATE = 500; // higher = slower
-let bulletTime = 0;
-let bulletSpeed = 250;
+let bulletTimer = 0;
 
 export default class extends Phaser.Sprite {
   constructor({ game, x, y, asset, frame }) {
@@ -33,6 +32,7 @@ export default class extends Phaser.Sprite {
     this.setBoundaries();
     this.listenForMovement();
     this.listenForShoot();
+    this.body.setSize(18, 25, 8, 7);
   }
 
   listenForMovement() {
@@ -55,7 +55,7 @@ export default class extends Phaser.Sprite {
       } else {
         this.setVelocity(-PLAYER_SPEED, 0);
       }
-      this.animations.play("left", true);
+      this.animations.play("left");
     } else if (moveRight) {
       if (moveUp) {
         this.setVelocity(PLAYER_SPEED, -PLAYER_SPEED);
@@ -64,13 +64,13 @@ export default class extends Phaser.Sprite {
       } else {
         this.setVelocity(PLAYER_SPEED, 0);
       }
-      this.animations.play("right", true);
+      this.animations.play("right");
     } else if (moveUp) {
       this.setVelocity(0, -PLAYER_SPEED);
-      this.animations.play("up", true);
+      this.animations.play("up");
     } else if (moveDown) {
       this.setVelocity(0, PLAYER_SPEED);
-      this.animations.play("down", true);
+      this.animations.play("down");
     } else {
       this.setVelocity(0, 0);
       if (lastKey) {
@@ -130,8 +130,7 @@ export default class extends Phaser.Sprite {
   }
 
   shoot(dir) {
-    // move to bullet class
-    if (this.game.time.now > bulletTime) {
+    if (this.game.time.now > bulletTimer) {
       const bullet = new Bullet({
         game: this.game,
         x: this.x,
@@ -139,8 +138,8 @@ export default class extends Phaser.Sprite {
         health: 1,
       });
       this.bullets.add(bullet);
-      bullet.shoot(dir);
-      bulletTime = game.time.now + FIRE_RATE;
+      bullet.fire(dir);
+      bulletTimer = game.time.now + FIRE_RATE;
     }
   }
 

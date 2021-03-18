@@ -3164,7 +3164,7 @@ const bulletSpeed = 250;
     this.body.velocity.y = y;
   }
 
-  shoot(dir) {
+  fire(dir) {
     switch (dir) {
       case "u":
         this.setVelocity(this.body.velocity.x, -bulletSpeed);
@@ -10911,6 +10911,7 @@ const centerGameObjects = objects => {
       y: this.world.centerY + 100,
       asset: "player"
     });
+
     this.game.add.existing(this.player);
     this.game.physics.arcade.enable(this.player);
     const enemy = new __WEBPACK_IMPORTED_MODULE_3__sprites_Enemy__["a" /* default */]({
@@ -10926,12 +10927,19 @@ const centerGameObjects = objects => {
 
   update() {
     this.game.physics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this);
-    this.player.alive && this.enemies.getFirstAlive() ? this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 100) : null;
+    this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
+    if (this.player.alive && this.enemies.getFirstAlive()) {
+      this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 100);
+    }
   }
 
   hitEnemy(bullet, enemy) {
     enemy.damage(bullet.health);
     bullet.kill();
+  }
+
+  crashEnemy(player, enemy) {
+    player.damage(1);
   }
 
   render() {
@@ -10944,7 +10952,8 @@ const centerGameObjects = objects => {
     let enemy = this.enemies.getFirstAlive();
     this.game.debug.start(32, 32);
     enemy && this.game.debug.line(`Health: ${enemy.health}/${enemy.maxHealth}`);
-    this.game.debug.line(`Player coordinates- X: ${this.player.x}, Y: ${this.player.y}`);
+    this.game.debug.body(this.player, null, false);
+    this.game.debug.body(enemy, null, false);
   }
 });
 
@@ -10966,8 +10975,7 @@ const centerGameObjects = objects => {
 
 const PLAYER_SPEED = 180;
 const FIRE_RATE = 500; // higher = slower
-let bulletTime = 0;
-let bulletSpeed = 250;
+let bulletTimer = 0;
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
   constructor({ game, x, y, asset, frame }) {
@@ -10996,6 +11004,7 @@ let bulletSpeed = 250;
     this.setBoundaries();
     this.listenForMovement();
     this.listenForShoot();
+    this.body.setSize(18, 25, 8, 7);
   }
 
   listenForMovement() {
@@ -11018,7 +11027,7 @@ let bulletSpeed = 250;
       } else {
         this.setVelocity(-PLAYER_SPEED, 0);
       }
-      this.animations.play("left", true);
+      this.animations.play("left");
     } else if (moveRight) {
       if (moveUp) {
         this.setVelocity(PLAYER_SPEED, -PLAYER_SPEED);
@@ -11027,13 +11036,13 @@ let bulletSpeed = 250;
       } else {
         this.setVelocity(PLAYER_SPEED, 0);
       }
-      this.animations.play("right", true);
+      this.animations.play("right");
     } else if (moveUp) {
       this.setVelocity(0, -PLAYER_SPEED);
-      this.animations.play("up", true);
+      this.animations.play("up");
     } else if (moveDown) {
       this.setVelocity(0, PLAYER_SPEED);
-      this.animations.play("down", true);
+      this.animations.play("down");
     } else {
       this.setVelocity(0, 0);
       if (lastKey) {
@@ -11093,8 +11102,7 @@ let bulletSpeed = 250;
   }
 
   shoot(dir) {
-    // move to bullet class
-    if (this.game.time.now > bulletTime) {
+    if (this.game.time.now > bulletTimer) {
       const bullet = new __WEBPACK_IMPORTED_MODULE_1__Bullet__["a" /* default */]({
         game: this.game,
         x: this.x,
@@ -11102,8 +11110,8 @@ let bulletSpeed = 250;
         health: 1
       });
       this.bullets.add(bullet);
-      bullet.shoot(dir);
-      bulletTime = game.time.now + FIRE_RATE;
+      bullet.fire(dir);
+      bulletTimer = game.time.now + FIRE_RATE;
     }
   }
 
@@ -11157,50 +11165,6 @@ let bulletSpeed = 250;
     this.animations.add("right", [6, 7, 8], 10);
     this.animations.add("up", [9, 10, 11], 10);
     this.animations.add("down", [0, 1, 2], 10);
-  }
-
-  update() {}
-
-  shoot(dir) {
-    if (this.game.time.now > bulletTime) {
-      const bullet = new __WEBPACK_IMPORTED_MODULE_1__Bullet__["a" /* default */]({
-        game: this.game,
-        x: this.x,
-        y: this.y
-      });
-      this.bullets.add(bullet);
-      switch (dir) {
-        case "u":
-          bullet.body.velocity.y = -bulletSpeed;
-          break;
-        case "d":
-          bullet.body.velocity.y = bulletSpeed;
-          break;
-        case "l":
-          bullet.body.velocity.x = -bulletSpeed;
-          break;
-        case "r":
-          bullet.body.velocity.x = bulletSpeed;
-          break;
-        case "ur":
-          bullet.body.velocity.x = bulletSpeed;
-          bullet.body.velocity.y = -bulletSpeed;
-          break;
-        case "ul":
-          bullet.body.velocity.x = -bulletSpeed;
-          bullet.body.velocity.y = -bulletSpeed;
-          break;
-        case "dr":
-          bullet.body.velocity.x = bulletSpeed;
-          bullet.body.velocity.y = bulletSpeed;
-          break;
-        case "dl":
-          bullet.body.velocity.x = -bulletSpeed;
-          bullet.body.velocity.y = bulletSpeed;
-          break;
-      }
-      bulletTime = game.time.now + fireRate;
-    }
   }
 });
 

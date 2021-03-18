@@ -18,6 +18,7 @@ export default class extends Phaser.State {
       y: this.world.centerY + 100,
       asset: "player",
     });
+    
     this.game.add.existing(this.player);
     this.game.physics.arcade.enable(this.player);
     const enemy = new Enemy({
@@ -39,14 +40,30 @@ export default class extends Phaser.State {
       null,
       this
     );
-    this.player.alive && this.enemies.getFirstAlive() ?
-      this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 100): 
-      null
+    this.game.physics.arcade.overlap(
+      this.player,
+      this.enemies,
+      this.crashEnemy,
+      null,
+      this
+    );
+    if (this.player.alive && this.enemies.getFirstAlive()) {
+      this.enemies.forEachAlive(
+        game.physics.arcade.moveToObject,
+        game.physics.arcade,
+        this.player,
+        100
+      );
+    }
   }
 
   hitEnemy(bullet, enemy) {
     enemy.damage(bullet.health);
     bullet.kill();
+  }
+
+  crashEnemy(player, enemy) { 
+    player.damage(1);
   }
 
   render() {
@@ -59,8 +76,8 @@ export default class extends Phaser.State {
     let enemy = this.enemies.getFirstAlive();
     this.game.debug.start(32, 32);
     enemy && this.game.debug.line(`Health: ${enemy.health}/${enemy.maxHealth}`);
-    this.game.debug.line(
-      `Player coordinates- X: ${this.player.x}, Y: ${this.player.y}`
-    );
+    this.game.debug.body(this.player, null, false);
+    this.game.debug.body(enemy, null, false);
+
   }
 }

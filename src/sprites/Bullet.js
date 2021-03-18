@@ -19,7 +19,7 @@ export default class extends Phaser.Sprite {
     this.body.velocity.y = y;
   }
 
-  shoot(dir) {
+  fire(dir) {
     switch (dir) {
       case "u":
         this.setVelocity(this.body.velocity.x, -bulletSpeed);

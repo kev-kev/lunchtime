@@ -20,7 +20,6 @@ export default class extends Phaser.State {
     });
     this.game.add.existing(this.player);
     this.game.physics.arcade.enable(this.player);
-
     const enemy = new Enemy({
       game: this.game,
       x: this.world.centerX,
@@ -40,6 +39,9 @@ export default class extends Phaser.State {
       null,
       this
     );
+    this.player.alive && this.enemies.getFirstAlive() ?
+      this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 100): 
+      null
   }
 
   hitEnemy(bullet, enemy) {
@@ -50,7 +52,6 @@ export default class extends Phaser.State {
   render() {
     if (__DEV__) {
       this.displayDebugInfo();
-      // this.game.debug.spriteInfo(this.bullet, 10, 10)
     }
   }
 

@@ -22,7 +22,7 @@ export default class extends Phaser.Sprite {
   }
 
   update() {
-
+    
   }
 
   shoot(dir) {
@@ -66,9 +66,4 @@ export default class extends Phaser.Sprite {
       bulletTime = game.time.now + fireRate;
     }
   }
-
-  damage(amount) {
-    super.damage(amount);
-  }
 }
-

@@ -10,12 +10,11 @@ export default class extends Phaser.Sprite {
     super(game, x, y, asset, frame);
     this.game = game;
     this.anchor.setTo(0.5);
-    this.scale.setTo(3);
+    this.scale.setTo(2);
     this.addAnimations();
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;
     this.health = 3;
-    
   }
 
   addAnimations() {

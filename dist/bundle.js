@@ -10846,6 +10846,8 @@ if (window.cordova) {
     this.loaderBg = this.add.sprite(this.game.world.centerX, this.game.world.centerY, "loaderBg");
     this.loaderBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, "loaderBar");
 
+    // this.physics.setBounds()
+
     Object(__WEBPACK_IMPORTED_MODULE_1__utils__["a" /* centerGameObjects */])([this.loaderBg, this.loaderBar]);
     this.load.setPreloadSprite(this.loaderBar);
     this.load.spritesheet("bullet", "assets/images/Shooter_SpriteSheet.png", 16.3, 16.5);
@@ -10930,6 +10932,8 @@ const centerGameObjects = objects => {
     this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
     if (this.player.alive && this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 80);
+    } else if (this.enemies.getFirstAlive()) {
+      this.enemies.forEachAlive();
     }
   }
 
@@ -10951,11 +10955,11 @@ const centerGameObjects = objects => {
   displayDebugInfo() {
     let enemy = this.enemies.getFirstAlive();
     this.game.debug.start(32, 32);
-    enemy && this.game.debug.line(`Health: ${enemy.health}/${enemy.maxHealth}`);
-
-    this.game.debug.body(this.player, null, false);
-    this.game.debug.body(enemy, null, false);
-    this.game.debug.spriteInfo(enemy, 32, 50);
+    enemy && this.player && this.game.debug.body(this.player, null, false);
+    if (enemy) {
+      this.game.debug.line(`Health: ${enemy.health}/${enemy.maxHealth}`);
+      this.game.debug.body(enemy, null, false);
+    }
   }
 });
 
@@ -10984,7 +10988,7 @@ let bulletTimer = 0;
     super(game, x, y, asset, frame);
     this.game = game;
     this.anchor.setTo(0.5);
-    this.scale.setTo(3);
+    this.scale.setTo(2);
     this.addAnimations();
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;
@@ -11155,7 +11159,7 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
   constructor({ game, x, y, asset, frame, health }) {
     super(game, x, y, asset, frame);
     this.anchor.setTo(0.5);
-    this.scale.setTo(3);
+    this.scale.setTo(2);
     this.game = game;
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;

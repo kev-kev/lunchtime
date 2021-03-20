@@ -54,6 +54,10 @@ export default class extends Phaser.State {
         this.player,
         80
       );
+    } else if (this.enemies.getFirstAlive()) {
+      this.enemies.forEachAlive(
+        // stop moving
+      );
     }
   }
 
@@ -75,10 +79,11 @@ export default class extends Phaser.State {
   displayDebugInfo() {
     let enemy = this.enemies.getFirstAlive();
     this.game.debug.start(32, 32);
-    enemy && this.game.debug.line(`Health: ${enemy.health}/${enemy.maxHealth}`);
-    
-    this.game.debug.body(this.player, null, false);
-    this.game.debug.body(enemy, null, false);
-    this.game.debug.spriteInfo(enemy, 32, 50);
+    enemy && 
+    this.player && this.game.debug.body(this.player, null, false);
+    if (enemy) {
+      this.game.debug.line(`Health: ${enemy.health}/${enemy.maxHealth}`);
+      this.game.debug.body(enemy, null, false);
+    }
   }
 }

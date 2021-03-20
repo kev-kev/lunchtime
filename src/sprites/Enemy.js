@@ -7,7 +7,7 @@ export default class extends Phaser.Sprite {
   constructor({ game, x, y, asset, frame, health }) {
     super(game, x, y, asset, frame);
     this.anchor.setTo(0.5);
-    this.scale.setTo(3);
+    this.scale.setTo(2);
     this.game = game;
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;

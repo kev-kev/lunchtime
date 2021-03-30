@@ -10899,7 +10899,9 @@ const centerGameObjects = objects => {
 
 
 
+let spawnTimer = 0;
 let invulnTimer = 0;
+const SPAWN_RATE = 4000;
 const INVULN_RATE = 1000; //bigger = more invuln on hit
 const DAMAGE_TINT = "0x8D4F6B";
 
@@ -10921,29 +10923,43 @@ const resetTint = sprite => {
       y: this.world.centerY + 100,
       asset: "player"
     });
-
     this.game.add.existing(this.player);
     this.game.physics.arcade.enable(this.player);
-    const enemy = new __WEBPACK_IMPORTED_MODULE_3__sprites_Enemy__["a" /* default */]({
-      game: this.game,
-      x: this.world.centerX,
-      y: this.world.centerY - 100,
-      asset: "pumpkin",
-      health: 3
-    });
-    this.enemies.add(enemy);
+    // const enemy = new Enemy({
+    //   game: this.game,
+    //   x: this.world.centerX,
+    //   y: this.world.centerY - 100,
+    //   asset: "pumpkin",
+    //   health: 3,
+    // });
+    // this.enemies.add(enemy);
     this.game.physics.arcade.enable(this.enemies);
   }
 
   update() {
     this.game.physics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this);
     this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
+    this.player.alive && this.spawnEnemies();
     if (this.player.alive && this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 80);
     } else if (this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(enemy => {
         enemy.body.stop();
       });
+    }
+  }
+
+  spawnEnemies() {
+    if (this.game.time.now > spawnTimer) {
+      const enemy = new __WEBPACK_IMPORTED_MODULE_3__sprites_Enemy__["a" /* default */]({
+        game: this.game,
+        x: this.world.centerX,
+        y: this.world.centerY - 100,
+        asset: "pumpkin",
+        health: 3
+      });
+      this.enemies.add(enemy);
+      spawnTimer = game.time.now + SPAWN_RATE;
     }
   }
 

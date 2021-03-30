@@ -4,7 +4,9 @@ import Bullet from "../sprites/Bullet";
 import Player from "../sprites/Player";
 import Enemy from "../sprites/Enemy";
 
+let spawnTimer = 0;
 let invulnTimer = 0;
+const SPAWN_RATE = 4000;
 const INVULN_RATE = 1000; //bigger = more invuln on hit
 const DAMAGE_TINT = "0x8D4F6B";
 
@@ -26,17 +28,16 @@ export default class extends Phaser.State {
       y: this.world.centerY + 100,
       asset: "player",
     });
-
     this.game.add.existing(this.player);
     this.game.physics.arcade.enable(this.player);
-    const enemy = new Enemy({
-      game: this.game,
-      x: this.world.centerX,
-      y: this.world.centerY - 100,
-      asset: "pumpkin",
-      health: 3,
-    });
-    this.enemies.add(enemy);
+    // const enemy = new Enemy({
+    //   game: this.game,
+    //   x: this.world.centerX,
+    //   y: this.world.centerY - 100,
+    //   asset: "pumpkin",
+    //   health: 3,
+    // });
+    // this.enemies.add(enemy);
     this.game.physics.arcade.enable(this.enemies);
   }
 
@@ -55,6 +56,7 @@ export default class extends Phaser.State {
       null,
       this
     );
+    this.player.alive && this.spawnEnemies();
     if (this.player.alive && this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(
         game.physics.arcade.moveToObject,
@@ -66,6 +68,20 @@ export default class extends Phaser.State {
       this.enemies.forEachAlive((enemy) => {
         enemy.body.stop();
       });
+    }
+  }
+
+  spawnEnemies() {
+    if (this.game.time.now > spawnTimer) {
+      const enemy = new Enemy({
+        game: this.game,
+        x: this.world.centerX,
+        y: this.world.centerY - 100,
+        asset: "pumpkin",
+        health: 3,
+      });
+      this.enemies.add(enemy);
+      spawnTimer = game.time.now + SPAWN_RATE;
     }
   }
 

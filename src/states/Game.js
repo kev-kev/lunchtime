@@ -5,7 +5,12 @@ import Player from "../sprites/Player";
 import Enemy from "../sprites/Enemy";
 
 let invulnTimer = 0;
-let invulnRate = 1000; //bigger = more invuln on hit
+const INVULN_RATE = 1000; //bigger = more invuln on hit
+const DAMAGE_TINT = "0x8D4F6B";
+
+const resetTint = (sprite) => {
+  sprite.tint = "0xFFFFFF";
+};
 
 export default class extends Phaser.State {
   init() {}
@@ -43,14 +48,7 @@ export default class extends Phaser.State {
       null,
       this
     );
-    // this.game.physics.arcade.overlap(
-    //   this.player,
-    //   this.enemies,
-    //   this.crashEnemy,
-    //   null,
-    //   this
-    // );
-    this.game.physics.arcade.collide(
+    this.game.physics.arcade.overlap(
       this.player,
       this.enemies,
       this.crashEnemy,
@@ -66,7 +64,7 @@ export default class extends Phaser.State {
       );
     } else if (this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive((enemy) => {
-        enemy.body.stop()
+        enemy.body.stop();
       });
     }
   }
@@ -77,13 +75,12 @@ export default class extends Phaser.State {
   }
 
   crashEnemy(player, enemy) {
-    // console.log(this.game.time.now)
-    if(this.game.time.now > invulnTimer) {
+    if (this.game.time.now > invulnTimer) {
+      player.tint = DAMAGE_TINT;
       player.damage(1);
-      invulnTimer = game.time.now + invulnRate
+      setTimeout(() => resetTint(player), INVULN_RATE);
+      invulnTimer = game.time.now + INVULN_RATE;
     }
-    
-    
   }
 
   render() {
@@ -95,7 +92,11 @@ export default class extends Phaser.State {
   displayDebugInfo() {
     let enemy = this.enemies.getFirstAlive();
     this.game.debug.start(32, 32);
-    enemy && this.game.debug.line(`Enemy Health: ${enemy.health}/${enemy.maxHealth}`);  
-    this.player && this.game.debug.line(`Player Health: ${this.player.health}/${this.player.maxHealth}`);  
+    enemy &&
+      this.game.debug.line(`Enemy Health: ${enemy.health}/${enemy.maxHealth}`);
+    this.player &&
+      this.game.debug.line(
+        `Player Health: ${this.player.health}/${this.player.maxHealth}`
+      );
   }
 }

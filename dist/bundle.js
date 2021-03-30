@@ -10900,7 +10900,12 @@ const centerGameObjects = objects => {
 
 
 let invulnTimer = 0;
-let invulnRate = 1000; //bigger = more invuln on hit
+const INVULN_RATE = 1000; //bigger = more invuln on hit
+const DAMAGE_TINT = "0x8D4F6B";
+
+const resetTint = sprite => {
+  sprite.tint = "0xFFFFFF";
+};
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.State {
   init() {}
@@ -10932,14 +10937,7 @@ let invulnRate = 1000; //bigger = more invuln on hit
 
   update() {
     this.game.physics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this);
-    // this.game.physics.arcade.overlap(
-    //   this.player,
-    //   this.enemies,
-    //   this.crashEnemy,
-    //   null,
-    //   this
-    // );
-    this.game.physics.arcade.collide(this.player, this.enemies, this.crashEnemy, null, this);
+    this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
     if (this.player.alive && this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 80);
     } else if (this.enemies.getFirstAlive()) {
@@ -10955,10 +10953,11 @@ let invulnRate = 1000; //bigger = more invuln on hit
   }
 
   crashEnemy(player, enemy) {
-    // console.log(this.game.time.now)
     if (this.game.time.now > invulnTimer) {
+      player.tint = DAMAGE_TINT;
       player.damage(1);
-      invulnTimer = game.time.now + invulnRate;
+      setTimeout(() => resetTint(player), INVULN_RATE);
+      invulnTimer = game.time.now + INVULN_RATE;
     }
   }
 
@@ -11006,6 +11005,7 @@ let bulletTimer = 0;
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;
     this.health = 3;
+    this.maxHealth = 3;
   }
 
   addAnimations() {

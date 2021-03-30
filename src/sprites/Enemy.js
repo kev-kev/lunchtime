@@ -11,8 +11,8 @@ export default class extends Phaser.Sprite {
     this.game = game;
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;
-    this.health = health;
-    this.maxHealth = health;
+    this.health = 100;
+    this.maxHealth = 100;
     this.addAnimations();
   }
 
@@ -30,6 +30,7 @@ export default class extends Phaser.Sprite {
   update() {
     this.listenForMove();
     this.body.setSize(25, 32, 4);
+    this.body.collideWorldBounds = true;
   }
 
   listenForMove() {

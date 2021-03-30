@@ -2,8 +2,9 @@ import Phaser from "phaser";
 import Bullet from "./Bullet";
 
 const PLAYER_SPEED = 200;
-const FIRE_RATE = 500; // higher = slower
+const FIRE_RATE = 200; // higher = slower
 let bulletTimer = 0;
+let invulnTimer = 0;
 
 export default class extends Phaser.Sprite {
   constructor({ game, x, y, asset, frame }) {
@@ -29,10 +30,10 @@ export default class extends Phaser.Sprite {
   }
 
   update() {
-    this.setBoundaries();
     this.listenForMove();
     this.listenForShoot();
     this.body.setSize(18, 25, 8, 7);
+    this.body.collideWorldBounds = true;
   }
 
   listenForMove() {
@@ -140,21 +141,6 @@ export default class extends Phaser.Sprite {
       this.bullets.add(bullet);
       bullet.fire(dir);
       bulletTimer = game.time.now + FIRE_RATE;
-    }
-  }
-
-  setBoundaries() {
-    if (this.position.x < 27) {
-      this.position.x = 27;
-    }
-    if (this.position.x > 0.96 * this.game.world.width) {
-      this.position.x = 0.96 * this.game.world.width;
-    }
-    if (this.position.y < 28) {
-      this.position.y = 28;
-    }
-    if (this.position.y > 0.88 * this.game.world.height) {
-      this.position.y = 0.88 * this.game.world.height;
     }
   }
 }

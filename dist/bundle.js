@@ -10899,6 +10899,9 @@ const centerGameObjects = objects => {
 
 
 
+let invulnTimer = 0;
+let invulnRate = 1000; //bigger = more invuln on hit
+
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.State {
   init() {}
   preload() {}
@@ -10929,11 +10932,20 @@ const centerGameObjects = objects => {
 
   update() {
     this.game.physics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this);
-    this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
+    // this.game.physics.arcade.overlap(
+    //   this.player,
+    //   this.enemies,
+    //   this.crashEnemy,
+    //   null,
+    //   this
+    // );
+    this.game.physics.arcade.collide(this.player, this.enemies, this.crashEnemy, null, this);
     if (this.player.alive && this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 80);
     } else if (this.enemies.getFirstAlive()) {
-      this.enemies.forEachAlive();
+      this.enemies.forEachAlive(enemy => {
+        enemy.body.stop();
+      });
     }
   }
 
@@ -10943,23 +10955,24 @@ const centerGameObjects = objects => {
   }
 
   crashEnemy(player, enemy) {
-    player.damage(1);
+    // console.log(this.game.time.now)
+    if (this.game.time.now > invulnTimer) {
+      player.damage(1);
+      invulnTimer = game.time.now + invulnRate;
+    }
   }
 
   render() {
     if (true) {
-      // this.displayDebugInfo();
+      this.displayDebugInfo();
     }
   }
 
   displayDebugInfo() {
     let enemy = this.enemies.getFirstAlive();
     this.game.debug.start(32, 32);
-    enemy && this.player && this.game.debug.body(this.player, null, false);
-    if (enemy) {
-      this.game.debug.line(`Health: ${enemy.health}/${enemy.maxHealth}`);
-      this.game.debug.body(enemy, null, false);
-    }
+    enemy && this.game.debug.line(`Enemy Health: ${enemy.health}/${enemy.maxHealth}`);
+    this.player && this.game.debug.line(`Player Health: ${this.player.health}/${this.player.maxHealth}`);
   }
 });
 
@@ -10982,7 +10995,6 @@ const centerGameObjects = objects => {
 const PLAYER_SPEED = 200;
 const FIRE_RATE = 200; // higher = slower
 let bulletTimer = 0;
-let invulnTimer = 0;
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
   constructor({ game, x, y, asset, frame }) {
@@ -11012,6 +11024,7 @@ let invulnTimer = 0;
     this.listenForShoot();
     this.body.setSize(18, 25, 8, 7);
     this.body.collideWorldBounds = true;
+    this.body.immovable = true;
   }
 
   listenForMove() {

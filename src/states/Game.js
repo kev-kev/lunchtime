@@ -4,6 +4,9 @@ import Bullet from "../sprites/Bullet";
 import Player from "../sprites/Player";
 import Enemy from "../sprites/Enemy";
 
+let invulnTimer = 0;
+let invulnRate = 1000; //bigger = more invuln on hit
+
 export default class extends Phaser.State {
   init() {}
   preload() {}
@@ -40,7 +43,14 @@ export default class extends Phaser.State {
       null,
       this
     );
-    this.game.physics.arcade.overlap(
+    // this.game.physics.arcade.overlap(
+    //   this.player,
+    //   this.enemies,
+    //   this.crashEnemy,
+    //   null,
+    //   this
+    // );
+    this.game.physics.arcade.collide(
       this.player,
       this.enemies,
       this.crashEnemy,
@@ -55,9 +65,9 @@ export default class extends Phaser.State {
         80
       );
     } else if (this.enemies.getFirstAlive()) {
-      this.enemies.forEachAlive(
-        // stop moving
-      );
+      this.enemies.forEachAlive((enemy) => {
+        enemy.body.stop()
+      });
     }
   }
 
@@ -67,23 +77,25 @@ export default class extends Phaser.State {
   }
 
   crashEnemy(player, enemy) {
-    player.damage(1);
+    // console.log(this.game.time.now)
+    if(this.game.time.now > invulnTimer) {
+      player.damage(1);
+      invulnTimer = game.time.now + invulnRate
+    }
+    
+    
   }
 
   render() {
     if (__DEV__) {
-      // this.displayDebugInfo();
+      this.displayDebugInfo();
     }
   }
 
   displayDebugInfo() {
     let enemy = this.enemies.getFirstAlive();
     this.game.debug.start(32, 32);
-    enemy && 
-    this.player && this.game.debug.body(this.player, null, false);
-    if (enemy) {
-      this.game.debug.line(`Health: ${enemy.health}/${enemy.maxHealth}`);
-      this.game.debug.body(enemy, null, false);
-    }
+    enemy && this.game.debug.line(`Enemy Health: ${enemy.health}/${enemy.maxHealth}`);  
+    this.player && this.game.debug.line(`Player Health: ${this.player.health}/${this.player.maxHealth}`);  
   }
 }

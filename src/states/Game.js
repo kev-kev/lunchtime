@@ -30,14 +30,6 @@ export default class extends Phaser.State {
     });
     this.game.add.existing(this.player);
     this.game.physics.arcade.enable(this.player);
-    // const enemy = new Enemy({
-    //   game: this.game,
-    //   x: this.world.centerX,
-    //   y: this.world.centerY - 100,
-    //   asset: "pumpkin",
-    //   health: 3,
-    // });
-    // this.enemies.add(enemy);
     this.game.physics.arcade.enable(this.enemies);
   }
 

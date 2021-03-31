@@ -4318,7 +4318,7 @@ module.exports = Math.scale || function scale(x, inLow, inHigh, outLow, outHigh)
 "use strict";
 /* harmony default export */ __webpack_exports__["a"] = ({
   gameWidth: 760,
-  gameHeight: 400,
+  gameHeight: 570,
   localStorageName: "phaseres6webpack",
   webfonts: ["Bangers"],
   antialias: false
@@ -10925,14 +10925,6 @@ const resetTint = sprite => {
     });
     this.game.add.existing(this.player);
     this.game.physics.arcade.enable(this.player);
-    // const enemy = new Enemy({
-    //   game: this.game,
-    //   x: this.world.centerX,
-    //   y: this.world.centerY - 100,
-    //   asset: "pumpkin",
-    //   health: 3,
-    // });
-    // this.enemies.add(enemy);
     this.game.physics.arcade.enable(this.enemies);
   }
 
@@ -11178,8 +11170,8 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
     this.game = game;
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;
-    this.health = 100;
-    this.maxHealth = 100;
+    this.health = 12;
+    this.maxHealth = 12;
     this.addAnimations();
   }
 

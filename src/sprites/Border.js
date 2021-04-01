@@ -6,4 +6,8 @@ export default class extends Phaser.Sprite {
     this.scale.setTo(2);
     this.game = game;
   }
+
+  update() {
+    this.body.immovable = true;
+  }
 }

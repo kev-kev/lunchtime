@@ -10920,6 +10920,7 @@ const resetTint = sprite => {
     this.add.sprite(0, 0, "sky");
     this.borders = this.add.group();
     this.addBorders();
+    this.borders.enableBody = true;
     this.enemies = this.add.group();
     this.enemies.enableBody = true;
     this.player = new __WEBPACK_IMPORTED_MODULE_2__sprites_Player__["a" /* default */]({
@@ -10929,6 +10930,7 @@ const resetTint = sprite => {
       asset: "player"
     });
     this.game.add.existing(this.player);
+    this.game.physics.arcade.enable(this.borders);
     this.game.physics.arcade.enable(this.player);
     this.game.physics.arcade.enable(this.enemies);
   }
@@ -10936,6 +10938,7 @@ const resetTint = sprite => {
   update() {
     this.game.physics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this);
     this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
+    this.game.physics.arcade.collide(this.player, this.borders, () => console.log("collision!"), null, this);
     this.player.alive && this.spawnEnemies();
     if (this.player.alive && this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 80);
@@ -10949,7 +10952,6 @@ const resetTint = sprite => {
   addBorders() {
     const border1 = new __WEBPACK_IMPORTED_MODULE_4__sprites_Border__["a" /* default */]({ game: this.game, x: 0, y: 0 });
     this.borders.add(border1);
-    this.add.sprite(0, 0, "border").scale.setTo(2);
   }
 
   spawnEnemies() {
@@ -11043,7 +11045,6 @@ let bulletTimer = 0;
     this.listenForShoot();
     this.body.setSize(18, 25, 8, 7);
     this.body.collideWorldBounds = true;
-    this.body.immovable = true;
   }
 
   listenForMove() {
@@ -11242,6 +11243,10 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
     super(game, x, y, "border");
     this.scale.setTo(2);
     this.game = game;
+  }
+
+  update() {
+    this.body.immovable = true;
   }
 });
 

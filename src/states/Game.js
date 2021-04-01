@@ -23,6 +23,7 @@ export default class extends Phaser.State {
     this.add.sprite(0, 0, "sky");
     this.borders = this.add.group();
     this.addBorders();
+    this.borders.enableBody = true;
     this.enemies = this.add.group();
     this.enemies.enableBody = true;
     this.player = new Player({
@@ -32,6 +33,7 @@ export default class extends Phaser.State {
       asset: "player",
     });
     this.game.add.existing(this.player);
+    this.game.physics.arcade.enable(this.borders);
     this.game.physics.arcade.enable(this.player);
     this.game.physics.arcade.enable(this.enemies);
   }
@@ -48,6 +50,13 @@ export default class extends Phaser.State {
       this.player,
       this.enemies,
       this.crashEnemy,
+      null,
+      this
+    );
+    this.game.physics.arcade.collide(
+      this.player,
+      this.borders,
+      () => console.log("collision!"),
       null,
       this
     );
@@ -69,7 +78,6 @@ export default class extends Phaser.State {
   addBorders() {
     const border1 = new Border({ game: this.game, x: 0, y: 0 });
     this.borders.add(border1);
-    this.add.sprite(0, 0, "border").scale.setTo(2);
   }
 
   spawnEnemies() {

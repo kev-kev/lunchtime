@@ -34,7 +34,6 @@ export default class extends Phaser.Sprite {
     this.listenForShoot();
     this.body.setSize(18, 25, 8, 7);
     this.body.collideWorldBounds = true;
-    this.body.immovable = true;
   }
 
   listenForMove() {

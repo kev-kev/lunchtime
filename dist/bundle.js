@@ -3158,6 +3158,10 @@ const bulletSpeed = 250;
     this.outOfBoundsKill = true;
   }
 
+  update() {
+    // this.body.bounce = 1;
+  }
+
   setVelocity(x, y) {
     this.body.velocity.x = x;
     this.body.velocity.y = y;
@@ -10885,27 +10889,28 @@ const centerGameObjects = objects => {
 
 const addBorders = (game, group) => {
   console.log("adding borders");
-  const corner1 = new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
+  const borders = [];
+  borders.push(new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
     game,
     x: 0,
     y: 0,
     asset: "cBorder"
-  });
-  const xBorder1 = new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
+  }), new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
+    game,
+    x: game.width - 32,
+    y: game.height - 32
+  }), new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
     game,
     x: 32,
     y: 0,
     asset: "xBorder"
-  });
-  const yBorder1 = new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
+  }), new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
     game,
     x: 0,
     y: 32,
     asset: "yBorder"
-  });
-  group.add(xBorder1);
-  group.add(corner1);
-  group.add(yBorder1);
+  }));
+  group.addMultiple(borders);
 };
 
 
@@ -10969,7 +10974,9 @@ const resetTint = sprite => {
   update() {
     this.game.physics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this);
     this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
-    this.game.physics.arcade.collide(this.player, this.borders, () => console.log("collision!"), null, this);
+    this.game.physics.arcade.collide(this.player, this.borders);
+    this.game.physics.arcade.collide(this.borders, this.enemies);
+    this.game.physics.arcade.collide(this.player.bullets, this.borders, () => this.wallShot(this.player.bullets));
     this.player.alive && this.spawnEnemies();
     if (this.player.alive && this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 80);
@@ -10978,6 +10985,11 @@ const resetTint = sprite => {
         enemy.body.stop();
       });
     }
+  }
+
+  wallShot(bullets) {
+    const bullet = bullets.getClosestTo(this.borders);
+    bullet.damage(1);
   }
 
   spawnEnemies() {
@@ -11273,6 +11285,7 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
 
   update() {
     this.body.immovable = true;
+    // this.body.bounce = 1;
   }
 });
 

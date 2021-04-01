@@ -13,6 +13,10 @@ export default class extends Phaser.Sprite {
     this.outOfBoundsKill = true;
   }
 
+  update() {
+    // this.body.bounce = 1;
+  }
+
   setVelocity(x, y) {
     this.body.velocity.x = x;
     this.body.velocity.y = y;

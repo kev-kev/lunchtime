@@ -9,5 +9,6 @@ export default class extends Phaser.Sprite {
 
   update() {
     this.body.immovable = true;
+    // this.body.bounce = 1;
   }
 }

@@ -53,12 +53,10 @@ export default class extends Phaser.State {
       null,
       this
     );
-    this.game.physics.arcade.collide(
-      this.player,
-      this.borders,
-      () => console.log("collision!"),
-      null,
-      this
+    this.game.physics.arcade.collide(this.player, this.borders);
+    this.game.physics.arcade.collide(this.borders, this.enemies);
+    this.game.physics.arcade.collide(this.player.bullets, this.borders, () =>
+      this.wallShot(this.player.bullets)
     );
     this.player.alive && this.spawnEnemies();
     if (this.player.alive && this.enemies.getFirstAlive()) {
@@ -73,6 +71,11 @@ export default class extends Phaser.State {
         enemy.body.stop();
       });
     }
+  }
+
+  wallShot(bullets) {
+    const bullet = bullets.getClosestTo(this.borders);
+    bullet.damage(1);
   }
 
   spawnEnemies() {

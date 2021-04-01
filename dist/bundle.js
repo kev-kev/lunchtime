@@ -3148,10 +3148,9 @@ module.exports = navigator && navigator.userAgent || '';
 const bulletSpeed = 250;
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
-  constructor({ game, x, y, frame, health, scale }) {
+  constructor({ game, x, y, frame, health }) {
     super(game, x, y, "bullet", frame);
     this.anchor.setTo(0.5);
-    this.scale.setTo(1);
     this.game = game;
     this.frame = 13;
     this.health = health;
@@ -10848,7 +10847,7 @@ if (window.cordova) {
 
     // this.physics.setBounds()
 
-    Object(__WEBPACK_IMPORTED_MODULE_1__utils__["a" /* centerGameObjects */])([this.loaderBg, this.loaderBar]);
+    Object(__WEBPACK_IMPORTED_MODULE_1__utils__["b" /* centerGameObjects */])([this.loaderBg, this.loaderBar]);
     this.load.setPreloadSprite(this.loaderBar);
     this.load.spritesheet("bullet", "assets/images/Shooter_SpriteSheet.png", 16.3, 16.5);
     this.load.spritesheet("player", "assets/images/panda.png", 32, 32);
@@ -10868,17 +10867,47 @@ if (window.cordova) {
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: centerGameObjects */
-/*! exports used: centerGameObjects */
+/*! exports provided: centerGameObjects, addBorders */
+/*! exports used: addBorders, centerGameObjects */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return centerGameObjects; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return addBorders; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__sprites_Border__ = __webpack_require__(/*! ./sprites/Border */ 346);
+
+
 const centerGameObjects = objects => {
   objects.forEach(function (object) {
     object.anchor.setTo(0.5);
   });
 };
-/* harmony export (immutable) */ __webpack_exports__["a"] = centerGameObjects;
+
+const addBorders = (game, group) => {
+  console.log("adding borders");
+  const corner1 = new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
+    game,
+    x: 0,
+    y: 0,
+    asset: "cBorder"
+  });
+  const xBorder1 = new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
+    game,
+    x: 32,
+    y: 0,
+    asset: "xBorder"
+  });
+  const yBorder1 = new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
+    game,
+    x: 0,
+    y: 32,
+    asset: "yBorder"
+  });
+  group.add(xBorder1);
+  group.add(corner1);
+  group.add(yBorder1);
+};
+
 
 
 /***/ }),
@@ -10896,8 +10925,8 @@ const centerGameObjects = objects => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Bullet__ = __webpack_require__(/*! ../sprites/Bullet */ 92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Player__ = __webpack_require__(/*! ../sprites/Player */ 343);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sprites_Enemy__ = __webpack_require__(/*! ../sprites/Enemy */ 344);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__sprites_Border__ = __webpack_require__(/*! ../sprites/Border */ 346);
-/* globals __DEV__ */
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils__ = __webpack_require__(/*! ../utils */ 341);
+
 
 
 
@@ -10921,7 +10950,7 @@ const resetTint = sprite => {
   create() {
     this.add.sprite(0, 0, "sky");
     this.borders = this.add.group();
-    this.addBorders();
+    Object(__WEBPACK_IMPORTED_MODULE_4__utils__["a" /* addBorders */])(this.game, this.borders);
     this.borders.enableBody = true;
     this.enemies = this.add.group();
     this.enemies.enableBody = true;
@@ -10949,30 +10978,6 @@ const resetTint = sprite => {
         enemy.body.stop();
       });
     }
-  }
-
-  addBorders() {
-    const corner1 = new __WEBPACK_IMPORTED_MODULE_4__sprites_Border__["a" /* default */]({
-      game: this.game,
-      x: 0,
-      y: 0,
-      asset: "cBorder"
-    });
-    const xBorder1 = new __WEBPACK_IMPORTED_MODULE_4__sprites_Border__["a" /* default */]({
-      game: this.game,
-      x: 32,
-      y: 0,
-      asset: "xBorder"
-    });
-    const yBorder1 = new __WEBPACK_IMPORTED_MODULE_4__sprites_Border__["a" /* default */]({
-      game: this.game,
-      x: 0,
-      y: 32,
-      asset: "yBorder"
-    });
-    this.borders.add(xBorder1);
-    this.borders.add(corner1);
-    this.borders.add(yBorder1);
   }
 
   spawnEnemies() {

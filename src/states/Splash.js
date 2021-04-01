@@ -28,6 +28,7 @@ export default class extends Phaser.State {
     );
     this.load.spritesheet("player", "assets/images/panda.png", 32, 32);
     this.load.spritesheet("pumpkin", "assets/images/pumpkin.png", 32, 32);
+    this.load.spritesheet("border", "assets/images/border.png", 48, 16);
   }
 
   create() {

@@ -10853,6 +10853,7 @@ if (window.cordova) {
     this.load.spritesheet("bullet", "assets/images/Shooter_SpriteSheet.png", 16.3, 16.5);
     this.load.spritesheet("player", "assets/images/panda.png", 32, 32);
     this.load.spritesheet("pumpkin", "assets/images/pumpkin.png", 32, 32);
+    this.load.spritesheet("border", "assets/images/border.png", 48, 16);
   }
 
   create() {
@@ -10893,7 +10894,9 @@ const centerGameObjects = objects => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Bullet__ = __webpack_require__(/*! ../sprites/Bullet */ 92);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Player__ = __webpack_require__(/*! ../sprites/Player */ 343);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sprites_Enemy__ = __webpack_require__(/*! ../sprites/Enemy */ 344);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__sprites_Border__ = __webpack_require__(/*! ../sprites/Border */ 346);
 /* globals __DEV__ */
+
 
 
 
@@ -10914,7 +10917,9 @@ const resetTint = sprite => {
   preload() {}
 
   create() {
-    this.sky = this.add.sprite(0, 0, "sky");
+    this.add.sprite(0, 0, "sky");
+    this.borders = this.add.group();
+    this.addBorders();
     this.enemies = this.add.group();
     this.enemies.enableBody = true;
     this.player = new __WEBPACK_IMPORTED_MODULE_2__sprites_Player__["a" /* default */]({
@@ -10939,6 +10944,12 @@ const resetTint = sprite => {
         enemy.body.stop();
       });
     }
+  }
+
+  addBorders() {
+    const border1 = new __WEBPACK_IMPORTED_MODULE_4__sprites_Border__["a" /* default */]({ game: this.game, x: 0, y: 0 });
+    this.borders.add(border1);
+    this.add.sprite(0, 0, "border").scale.setTo(2);
   }
 
   spawnEnemies() {
@@ -11208,6 +11219,29 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
     } else if (this.body.deltaX() < 0) {
       this.animations.play("moveLeft");
     }
+  }
+});
+
+/***/ }),
+/* 345 */,
+/* 346 */
+/*!*******************************!*\
+  !*** ./src/sprites/Border.js ***!
+  \*******************************/
+/*! exports provided: default */
+/*! exports used: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser__ = __webpack_require__(/*! phaser */ 31);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_phaser__);
+
+
+/* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
+  constructor({ game, x, y }) {
+    super(game, x, y, "border");
+    this.scale.setTo(2);
+    this.game = game;
   }
 });
 

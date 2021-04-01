@@ -3,6 +3,7 @@ import Phaser from "phaser";
 import Bullet from "../sprites/Bullet";
 import Player from "../sprites/Player";
 import Enemy from "../sprites/Enemy";
+import Border from "../sprites/Border";
 
 let spawnTimer = 0;
 let invulnTimer = 0;
@@ -19,7 +20,9 @@ export default class extends Phaser.State {
   preload() {}
 
   create() {
-    this.sky = this.add.sprite(0, 0, "sky");
+    this.add.sprite(0, 0, "sky");
+    this.borders = this.add.group();
+    this.addBorders();
     this.enemies = this.add.group();
     this.enemies.enableBody = true;
     this.player = new Player({
@@ -61,6 +64,12 @@ export default class extends Phaser.State {
         enemy.body.stop();
       });
     }
+  }
+
+  addBorders() {
+    const border1 = new Border({ game: this.game, x: 0, y: 0 });
+    this.borders.add(border1);
+    this.add.sprite(0, 0, "border").scale.setTo(2);
   }
 
   spawnEnemies() {

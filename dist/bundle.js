@@ -10908,12 +10908,60 @@ const addBorders = (game, group) => {
     y: game.height - 32,
     asset: "cBorder"
   }, {
+    x: 0,
+    y: game.height - 32,
+    asset: "cBorder"
+  }, {
+    x: game.width - 32,
+    y: 0,
+    asset: "cBorder"
+  }, {
     x: 32,
     y: 0,
     asset: "xBorder"
   }, {
+    x: 128,
+    y: 0,
+    asset: "xBorder"
+  }, {
+    x: game.width - 128,
+    y: 0,
+    asset: "xBorder"
+  }, {
+    x: game.width - 224,
+    y: 0,
+    asset: "xBorder"
+  }, {
+    x: 32,
+    y: game.height - 32,
+    asset: "xBorder"
+  }, {
+    x: 128,
+    y: game.height - 32,
+    asset: "xBorder"
+  }, {
+    x: game.width - 128,
+    y: game.height - 32,
+    asset: "xBorder"
+  }, {
+    x: game.width - 224,
+    y: game.height - 32,
+    asset: "xBorder"
+  }, {
     x: 0,
     y: 32,
+    asset: "yBorder"
+  }, {
+    x: 0,
+    y: game.height - 128,
+    asset: "yBorder"
+  }, {
+    x: game.width - 32,
+    y: 32,
+    asset: "yBorder"
+  }, {
+    x: game.width - 32,
+    y: game.height - 128,
     asset: "yBorder"
   }];
   const borders = generateBorders(borderData, game);
@@ -11087,7 +11135,7 @@ let bulletTimer = 0;
 
   update() {
     this.listenForMove();
-    this.listenForShoot();
+    this.alive && this.listenForShoot();
     this.body.setSize(18, 25, 8, 7);
     this.body.collideWorldBounds = true;
   }

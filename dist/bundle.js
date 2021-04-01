@@ -10887,29 +10887,36 @@ const centerGameObjects = objects => {
   });
 };
 
+const generateBorders = (data, game) => {
+  return data.map(borderInfo => {
+    return new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
+      game,
+      x: borderInfo.x,
+      y: borderInfo.y,
+      asset: borderInfo.asset
+    });
+  });
+};
+
 const addBorders = (game, group) => {
-  console.log("adding borders");
-  const borders = [];
-  borders.push(new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
-    game,
+  const borderData = [{
     x: 0,
     y: 0,
     asset: "cBorder"
-  }), new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
-    game,
+  }, {
     x: game.width - 32,
-    y: game.height - 32
-  }), new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
-    game,
+    y: game.height - 32,
+    asset: "cBorder"
+  }, {
     x: 32,
     y: 0,
     asset: "xBorder"
-  }), new __WEBPACK_IMPORTED_MODULE_0__sprites_Border__["a" /* default */]({
-    game,
+  }, {
     x: 0,
     y: 32,
     asset: "yBorder"
-  }));
+  }];
+  const borders = generateBorders(borderData, game);
   group.addMultiple(borders);
 };
 

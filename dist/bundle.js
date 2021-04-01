@@ -10853,8 +10853,9 @@ if (window.cordova) {
     this.load.spritesheet("bullet", "assets/images/Shooter_SpriteSheet.png", 16.3, 16.5);
     this.load.spritesheet("player", "assets/images/panda.png", 32, 32);
     this.load.spritesheet("pumpkin", "assets/images/pumpkin.png", 32, 32);
-    this.load.spritesheet("border", "assets/images/border.png", 48, 16);
-    this.load.spritesheet("corner", "assets/images/border.png", 16, 16, -1, 0, 0, 4);
+    this.load.spritesheet("xBorder", "assets/images/borders.png", 48, 16);
+    this.load.spritesheet("cBorder", "assets/images/borders.png", 16, 16, -1, 0, 0, 4);
+    this.load.spritesheet("yBorder", "assets/images/borders.png", 16, 48, -1, 0, 0, 3);
   }
 
   create() {
@@ -10955,11 +10956,23 @@ const resetTint = sprite => {
       game: this.game,
       x: 0,
       y: 0,
-      asset: "corner"
+      asset: "cBorder"
     });
-    const border1 = new __WEBPACK_IMPORTED_MODULE_4__sprites_Border__["a" /* default */]({ game: this.game, x: 32, y: 0 });
-    this.borders.add(border1);
+    const xBorder1 = new __WEBPACK_IMPORTED_MODULE_4__sprites_Border__["a" /* default */]({
+      game: this.game,
+      x: 32,
+      y: 0,
+      asset: "xBorder"
+    });
+    const yBorder1 = new __WEBPACK_IMPORTED_MODULE_4__sprites_Border__["a" /* default */]({
+      game: this.game,
+      x: 0,
+      y: 32,
+      asset: "yBorder"
+    });
+    this.borders.add(xBorder1);
     this.borders.add(corner1);
+    this.borders.add(yBorder1);
   }
 
   spawnEnemies() {
@@ -11247,7 +11260,7 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
 
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite {
-  constructor({ game, x, y, asset = "border" }) {
+  constructor({ game, x, y, asset }) {
     super(game, x, y, asset);
     this.scale.setTo(2);
     this.game = game;

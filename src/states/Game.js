@@ -80,11 +80,23 @@ export default class extends Phaser.State {
       game: this.game,
       x: 0,
       y: 0,
-      asset: "corner",
+      asset: "cBorder",
     });
-    const border1 = new Border({ game: this.game, x: 32, y: 0 });
-    this.borders.add(border1);
+    const xBorder1 = new Border({
+      game: this.game,
+      x: 32,
+      y: 0,
+      asset: "xBorder",
+    });
+    const yBorder1 = new Border({
+      game: this.game,
+      x: 0,
+      y: 32,
+      asset: "yBorder",
+    });
+    this.borders.add(xBorder1);
     this.borders.add(corner1);
+    this.borders.add(yBorder1);
   }
 
   spawnEnemies() {

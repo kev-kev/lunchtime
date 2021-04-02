@@ -1,9 +1,8 @@
 import Phaser from "phaser";
-import Bullet from "../sprites/Bullet";
 import Player from "../sprites/Player";
 import Enemy from "../sprites/Enemy";
-
-import { addBorders } from "../utils";
+import Border from "../sprites/Border";
+import { getBorderData } from "../borderData";
 
 let spawnTimer = 0;
 let invulnTimer = 0;
@@ -22,7 +21,7 @@ export default class extends Phaser.State {
   create() {
     this.add.sprite(0, 0, "sky");
     this.borders = this.add.group();
-    addBorders(this.game, this.borders);
+    this.generateBorders();
     this.borders.enableBody = true;
     this.enemies = this.add.group();
     this.enemies.enableBody = true;
@@ -36,6 +35,21 @@ export default class extends Phaser.State {
     this.game.physics.arcade.enable(this.borders);
     this.game.physics.arcade.enable(this.player);
     this.game.physics.arcade.enable(this.enemies);
+  }
+
+  generateBorders() {
+    const borderData = getBorderData(this.game);
+    console.log(borderData);
+    const borders = borderData.map((borderInfo) => {
+      return new Border({
+        game: this.game,
+        x: borderInfo.x,
+        y: borderInfo.y,
+        asset: borderInfo.asset,
+      });
+    });
+    console.log(borders);
+    this.borders.addMultiple(borders);
   }
 
   update() {

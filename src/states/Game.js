@@ -7,7 +7,8 @@ import { getBorderData, addBulletCollisions } from "../borderUtils";
 let spawnTimer = 0;
 let invulnTimer = 0;
 const SPAWN_RATE = 4000;
-const INVULN_RATE = 1000; //bigger = more invuln on hit
+const PRE_SPAWN_TIME = 2000; // ms before enemies begin spawning
+const INVULN_RATE = 1000; // bigger = more invuln on hit
 const DAMAGE_TINT = "0x8D4F6B";
 
 const resetTint = (sprite) => {
@@ -69,7 +70,7 @@ export default class extends Phaser.State {
     this.game.physics.arcade.collide(this.player, this.borders);
     this.game.physics.arcade.collide(this.borders, this.enemies);
 
-    this.player.alive && this.spawnEnemies();
+    this.player.alive && setTimeout(() => this.spawnEnemies(), PRE_SPAWN_TIME);
     if (this.player.alive && this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(
         game.physics.arcade.moveToObject,
@@ -88,8 +89,8 @@ export default class extends Phaser.State {
     if (this.game.time.now > spawnTimer) {
       const enemy = new Enemy({
         game: this.game,
-        x: this.world.centerX,
-        y: this.world.centerY - 100,
+        x: this.world.width / 2,
+        y: this.world.height / 2,
         asset: "pumpkin",
         health: 3,
       });

@@ -10900,7 +10900,7 @@ const centerGameObjects = objects => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Player__ = __webpack_require__(/*! ../sprites/Player */ 343);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Enemy__ = __webpack_require__(/*! ../sprites/Enemy */ 344);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sprites_Border__ = __webpack_require__(/*! ../sprites/Border */ 345);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__borderData__ = __webpack_require__(/*! ../borderData */ 346);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__borderUtils__ = __webpack_require__(/*! ../borderUtils */ 348);
 
 
 
@@ -10941,8 +10941,7 @@ const resetTint = sprite => {
   }
 
   generateBorders() {
-    const borderData = Object(__WEBPACK_IMPORTED_MODULE_4__borderData__["a" /* getBorderData */])(this.game);
-    console.log(borderData);
+    const borderData = Object(__WEBPACK_IMPORTED_MODULE_4__borderUtils__["b" /* getBorderData */])(this.game);
     const borders = borderData.map(borderInfo => {
       return new __WEBPACK_IMPORTED_MODULE_3__sprites_Border__["a" /* default */]({
         game: this.game,
@@ -10951,16 +10950,16 @@ const resetTint = sprite => {
         asset: borderInfo.asset
       });
     });
-    console.log(borders);
     this.borders.addMultiple(borders);
   }
 
   update() {
+    Object(__WEBPACK_IMPORTED_MODULE_4__borderUtils__["a" /* addBulletCollisions */])(this.borders, this.player.bullets, this.game);
     this.game.physics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this);
     this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
     this.game.physics.arcade.collide(this.player, this.borders);
     this.game.physics.arcade.collide(this.borders, this.enemies);
-    this.game.physics.arcade.collide(this.player.bullets, this.borders, () => this.wallShot(this.player.bullets));
+
     this.player.alive && this.spawnEnemies();
     if (this.player.alive && this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(game.physics.arcade.moveToObject, game.physics.arcade, this.player, 80);
@@ -10969,11 +10968,6 @@ const resetTint = sprite => {
         enemy.body.stop();
       });
     }
-  }
-
-  wallShot(bullets) {
-    const bullet = bullets.getClosestTo(this.borders);
-    bullet.damage(1);
   }
 
   spawnEnemies() {
@@ -11273,16 +11267,19 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
 });
 
 /***/ }),
-/* 346 */
-/*!***************************!*\
-  !*** ./src/borderData.js ***!
-  \***************************/
-/*! exports provided: getBorderData */
-/*! exports used: getBorderData */
+/* 346 */,
+/* 347 */,
+/* 348 */
+/*!****************************!*\
+  !*** ./src/borderUtils.js ***!
+  \****************************/
+/*! exports provided: getBorderData, addBulletCollisions */
+/*! exports used: addBulletCollisions, getBorderData */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return getBorderData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return getBorderData; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return addBulletCollisions; });
 const getBorderData = game => {
   return [{
     x: 0,
@@ -11349,6 +11346,16 @@ const getBorderData = game => {
     y: game.height - 128,
     asset: "yBorder"
   }];
+};
+
+const addBulletCollisions = (borders, bullets, game) => {
+  borders.forEach(border => {
+    game.physics.arcade.collide(border, bullets, () => {
+      console.log(bullets);
+      const bullet = bullets.getClosestTo(border);
+      bullet.damage(1);
+    });
+  });
 };
 
 

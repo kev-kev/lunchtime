@@ -83,4 +83,14 @@ const getBorderData = (game) => {
   ];
 };
 
-export { getBorderData };
+const addBulletCollisions = (borders, bullets, game) => {
+  borders.forEach((border) => {
+    game.physics.arcade.collide(border, bullets, () => {
+      console.log(bullets);
+      const bullet = bullets.getClosestTo(border);
+      bullet.damage(1);
+    });
+  });
+};
+
+export { getBorderData, addBulletCollisions };

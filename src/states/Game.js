@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import Player from "../sprites/Player";
 import Enemy from "../sprites/Enemy";
 import Border from "../sprites/Border";
-import { getBorderData } from "../borderData";
+import { getBorderData, addBulletCollisions } from "../borderUtils";
 
 let spawnTimer = 0;
 let invulnTimer = 0;
@@ -39,7 +39,6 @@ export default class extends Phaser.State {
 
   generateBorders() {
     const borderData = getBorderData(this.game);
-    console.log(borderData);
     const borders = borderData.map((borderInfo) => {
       return new Border({
         game: this.game,
@@ -48,11 +47,11 @@ export default class extends Phaser.State {
         asset: borderInfo.asset,
       });
     });
-    console.log(borders);
     this.borders.addMultiple(borders);
   }
 
   update() {
+    addBulletCollisions(this.borders, this.player.bullets, this.game);
     this.game.physics.arcade.overlap(
       this.player.bullets,
       this.enemies,
@@ -69,9 +68,7 @@ export default class extends Phaser.State {
     );
     this.game.physics.arcade.collide(this.player, this.borders);
     this.game.physics.arcade.collide(this.borders, this.enemies);
-    this.game.physics.arcade.collide(this.player.bullets, this.borders, () =>
-      this.wallShot(this.player.bullets)
-    );
+
     this.player.alive && this.spawnEnemies();
     if (this.player.alive && this.enemies.getFirstAlive()) {
       this.enemies.forEachAlive(
@@ -85,11 +82,6 @@ export default class extends Phaser.State {
         enemy.body.stop();
       });
     }
-  }
-
-  wallShot(bullets) {
-    const bullet = bullets.getClosestTo(this.borders);
-    bullet.damage(1);
   }
 
   spawnEnemies() {

@@ -11349,10 +11349,8 @@ const getBorderData = game => {
 };
 
 const addBulletCollisions = (borders, bullets, game) => {
-  borders.forEach(border => {
-    game.physics.arcade.collide(border, bullets, () => {
-      console.log(bullets);
-      const bullet = bullets.getClosestTo(border);
+  bullets.forEach(bullet => {
+    game.physics.arcade.collide(borders, bullet, () => {
       bullet.damage(1);
     });
   });

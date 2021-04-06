@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import Player from "../sprites/Player";
 import Enemy from "../sprites/Enemy";
 import Border from "../sprites/Border";
+import { getRandomNum } from "../utils";
 import { getBorderData, addBulletCollisions } from "../borderUtils";
 
 let spawnTimer = 0;
@@ -29,7 +30,7 @@ export default class extends Phaser.State {
     this.player = new Player({
       game: this.game,
       x: this.world.centerX,
-      y: this.world.centerY + 100,
+      y: this.world.centerY,
       asset: "player",
     });
     this.game.add.existing(this.player);
@@ -69,7 +70,7 @@ export default class extends Phaser.State {
     );
     this.game.physics.arcade.collide(this.enemies);
     this.game.physics.arcade.collide(this.player, this.borders);
-    this.game.physics.arcade.collide(this.borders, this.enemies);
+    this.game.physics.arcade.collide(this.enemies, this.borders);
 
     this.player.alive && setTimeout(() => this.spawnEnemies(), PRE_SPAWN_TIME);
     if (this.player.alive && this.enemies.getFirstAlive()) {
@@ -86,19 +87,33 @@ export default class extends Phaser.State {
     }
   }
 
-  spawnEnemies() {
-    // need to create
+  getSpawnLocation(dir) {
     if (this.game.time.now > spawnTimer) {
-      const enemy = new Enemy({
-        game: this.game,
-        x: this.world.width / 2,
-        y: 0,
-        asset: "pumpkin",
-        health: 3,
-      });
-      this.enemies.add(enemy);
-      spawnTimer = game.time.now + SPAWN_RATE;
+      switch (dir) {
+        case "up":
+          return {
+            x: getRandomNum(
+              this.game.world.centerX - 140,
+              this.game.world.centerX + 140
+            ),
+            y: -30,
+          };
+      }
     }
+  }
+
+  spawnEnemies() {
+    let spawnLocation = this.getSpawnLocation("up");
+    console.log(spawnLocation);
+    const enemy = new Enemy({
+      game: this.game,
+      x: spawnLocation.x,
+      y: spawnLocation.y,
+      asset: "pumpkin",
+      health: 3,
+    });
+    this.enemies.add(enemy);
+    spawnTimer = game.time.now + SPAWN_RATE;
   }
 
   hitEnemy(bullet, enemy) {

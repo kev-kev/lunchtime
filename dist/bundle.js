@@ -10869,16 +10869,21 @@ if (window.cordova) {
 /*!**********************!*\
   !*** ./src/utils.js ***!
   \**********************/
-/*! exports provided: centerGameObjects */
-/*! exports used: centerGameObjects */
+/*! exports provided: centerGameObjects, getRandomNum */
+/*! exports used: centerGameObjects, getRandomNum */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return centerGameObjects; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return getRandomNum; });
 const centerGameObjects = objects => {
   objects.forEach(function (object) {
     object.anchor.setTo(0.5);
   });
+};
+
+const getRandomNum = (min, max) => {
+  return Math.random() * (max - min) + min;
 };
 
 
@@ -10898,7 +10903,9 @@ const centerGameObjects = objects => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Player__ = __webpack_require__(/*! ../sprites/Player */ 343);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Enemy__ = __webpack_require__(/*! ../sprites/Enemy */ 344);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sprites_Border__ = __webpack_require__(/*! ../sprites/Border */ 345);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__borderUtils__ = __webpack_require__(/*! ../borderUtils */ 346);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__utils__ = __webpack_require__(/*! ../utils */ 341);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__borderUtils__ = __webpack_require__(/*! ../borderUtils */ 346);
+
 
 
 
@@ -10930,7 +10937,7 @@ const resetTint = sprite => {
     this.player = new __WEBPACK_IMPORTED_MODULE_1__sprites_Player__["a" /* default */]({
       game: this.game,
       x: this.world.centerX,
-      y: this.world.centerY + 100,
+      y: this.world.centerY,
       asset: "player"
     });
     this.game.add.existing(this.player);
@@ -10940,7 +10947,7 @@ const resetTint = sprite => {
   }
 
   generateBorders() {
-    const borderData = Object(__WEBPACK_IMPORTED_MODULE_4__borderUtils__["b" /* getBorderData */])(this.game);
+    const borderData = Object(__WEBPACK_IMPORTED_MODULE_5__borderUtils__["b" /* getBorderData */])(this.game);
     const borders = borderData.map(borderInfo => {
       return new __WEBPACK_IMPORTED_MODULE_3__sprites_Border__["a" /* default */]({
         game: this.game,
@@ -10953,12 +10960,12 @@ const resetTint = sprite => {
   }
 
   update() {
-    Object(__WEBPACK_IMPORTED_MODULE_4__borderUtils__["a" /* addBulletCollisions */])(this.borders, this.player.bullets, this.game);
+    Object(__WEBPACK_IMPORTED_MODULE_5__borderUtils__["a" /* addBulletCollisions */])(this.borders, this.player.bullets, this.game);
     this.game.physics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this);
     this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
     this.game.physics.arcade.collide(this.enemies);
     this.game.physics.arcade.collide(this.player, this.borders);
-    this.game.physics.arcade.collide(this.borders, this.enemies);
+    this.game.physics.arcade.collide(this.enemies, this.borders);
 
     this.player.alive && setTimeout(() => this.spawnEnemies(), PRE_SPAWN_TIME);
     if (this.player.alive && this.enemies.getFirstAlive()) {
@@ -10970,19 +10977,30 @@ const resetTint = sprite => {
     }
   }
 
-  spawnEnemies() {
-    // need to create
+  getSpawnLocation(dir) {
     if (this.game.time.now > spawnTimer) {
-      const enemy = new __WEBPACK_IMPORTED_MODULE_2__sprites_Enemy__["a" /* default */]({
-        game: this.game,
-        x: this.world.width / 2,
-        y: 0,
-        asset: "pumpkin",
-        health: 3
-      });
-      this.enemies.add(enemy);
-      spawnTimer = game.time.now + SPAWN_RATE;
+      switch (dir) {
+        case "up":
+          return {
+            x: Object(__WEBPACK_IMPORTED_MODULE_4__utils__["b" /* getRandomNum */])(this.game.world.centerX - 140, this.game.world.centerX + 140),
+            y: -30
+          };
+      }
     }
+  }
+
+  spawnEnemies() {
+    let spawnLocation = this.getSpawnLocation("up");
+    console.log(spawnLocation);
+    const enemy = new __WEBPACK_IMPORTED_MODULE_2__sprites_Enemy__["a" /* default */]({
+      game: this.game,
+      x: spawnLocation.x,
+      y: spawnLocation.y,
+      asset: "pumpkin",
+      health: 3
+    });
+    this.enemies.add(enemy);
+    spawnTimer = game.time.now + SPAWN_RATE;
   }
 
   hitEnemy(bullet, enemy) {

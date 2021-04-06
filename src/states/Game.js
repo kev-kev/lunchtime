@@ -88,32 +88,58 @@ export default class extends Phaser.State {
   }
 
   getSpawnLocation(dir) {
-    if (this.game.time.now > spawnTimer) {
-      switch (dir) {
-        case "up":
-          return {
-            x: getRandomNum(
-              this.game.world.centerX - 140,
-              this.game.world.centerX + 140
-            ),
-            y: -30,
-          };
-      }
+    switch (dir) {
+      case "up":
+        console.log("up");
+        return {
+          x: getRandomNum(
+            this.game.world.centerX - 140,
+            this.game.world.centerX + 140
+          ),
+          y: -30,
+        };
+      case "down":
+        return {
+          x: getRandomNum(
+            this.game.world.centerX - 140,
+            this.game.world.centerX + 140
+          ),
+          y: this.game.height + 30,
+        };
+      case "left":
+        return {
+          x: -30,
+          y: getRandomNum(
+            this.game.world.centerY - 150,
+            this.game.world.centerY + 150
+          ),
+        };
+      case "right":
+        return {
+          x: this.game.width + 30,
+          y: getRandomNum(
+            this.game.world.centerY - 150,
+            this.game.world.centerY + 150
+          ),
+        };
     }
   }
 
   spawnEnemies() {
-    let spawnLocation = this.getSpawnLocation("up");
-    console.log(spawnLocation);
-    const enemy = new Enemy({
-      game: this.game,
-      x: spawnLocation.x,
-      y: spawnLocation.y,
-      asset: "pumpkin",
-      health: 3,
-    });
-    this.enemies.add(enemy);
-    spawnTimer = game.time.now + SPAWN_RATE;
+    if (this.game.time.now > spawnTimer) {
+      const directions = ["up", "down", "left", "right"];
+      let randomDir = directions[Math.floor(Math.random() * directions.length)];
+      let spawnLocation = this.getSpawnLocation(randomDir);
+      const enemy = new Enemy({
+        game: this.game,
+        x: spawnLocation.x,
+        y: spawnLocation.y,
+        asset: "pumpkin",
+        health: 3,
+      });
+      this.enemies.add(enemy);
+      spawnTimer = game.time.now + SPAWN_RATE;
+    }
   }
 
   hitEnemy(bullet, enemy) {

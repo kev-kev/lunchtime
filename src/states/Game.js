@@ -67,6 +67,7 @@ export default class extends Phaser.State {
       null,
       this
     );
+    this.game.physics.arcade.collide(this.enemies);
     this.game.physics.arcade.collide(this.player, this.borders);
     this.game.physics.arcade.collide(this.borders, this.enemies);
 
@@ -86,11 +87,12 @@ export default class extends Phaser.State {
   }
 
   spawnEnemies() {
+    // need to create
     if (this.game.time.now > spawnTimer) {
       const enemy = new Enemy({
         game: this.game,
         x: this.world.width / 2,
-        y: this.world.height / 2,
+        y: 0,
         asset: "pumpkin",
         health: 3,
       });

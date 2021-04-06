@@ -10849,8 +10849,6 @@ if (window.cordova) {
     this.loaderBg = this.add.sprite(this.game.world.centerX, this.game.world.centerY, "loaderBg");
     this.loaderBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, "loaderBar");
 
-    // this.physics.setBounds()
-
     Object(__WEBPACK_IMPORTED_MODULE_1__utils__["a" /* centerGameObjects */])([this.loaderBg, this.loaderBar]);
     this.load.setPreloadSprite(this.loaderBar);
     this.load.spritesheet("bullet", "assets/images/Shooter_SpriteSheet.png", 16.3, 16.5);
@@ -10900,7 +10898,7 @@ const centerGameObjects = objects => {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__sprites_Player__ = __webpack_require__(/*! ../sprites/Player */ 343);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__sprites_Enemy__ = __webpack_require__(/*! ../sprites/Enemy */ 344);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__sprites_Border__ = __webpack_require__(/*! ../sprites/Border */ 345);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__borderUtils__ = __webpack_require__(/*! ../borderUtils */ 348);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__borderUtils__ = __webpack_require__(/*! ../borderUtils */ 346);
 
 
 
@@ -10958,6 +10956,7 @@ const resetTint = sprite => {
     Object(__WEBPACK_IMPORTED_MODULE_4__borderUtils__["a" /* addBulletCollisions */])(this.borders, this.player.bullets, this.game);
     this.game.physics.arcade.overlap(this.player.bullets, this.enemies, this.hitEnemy, null, this);
     this.game.physics.arcade.overlap(this.player, this.enemies, this.crashEnemy, null, this);
+    this.game.physics.arcade.collide(this.enemies);
     this.game.physics.arcade.collide(this.player, this.borders);
     this.game.physics.arcade.collide(this.borders, this.enemies);
 
@@ -10972,11 +10971,12 @@ const resetTint = sprite => {
   }
 
   spawnEnemies() {
+    // need to create
     if (this.game.time.now > spawnTimer) {
       const enemy = new __WEBPACK_IMPORTED_MODULE_2__sprites_Enemy__["a" /* default */]({
         game: this.game,
         x: this.world.width / 2,
-        y: this.world.height / 2,
+        y: 0,
         asset: "pumpkin",
         health: 3
       });
@@ -11268,9 +11268,7 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
 });
 
 /***/ }),
-/* 346 */,
-/* 347 */,
-/* 348 */
+/* 346 */
 /*!****************************!*\
   !*** ./src/borderUtils.js ***!
   \****************************/

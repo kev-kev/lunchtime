@@ -16,8 +16,6 @@ export default class extends Phaser.State {
       "loaderBar"
     );
 
-    // this.physics.setBounds()
-
     centerGameObjects([this.loaderBg, this.loaderBar]);
     this.load.setPreloadSprite(this.loaderBar);
     this.load.spritesheet(

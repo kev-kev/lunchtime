@@ -39,7 +39,7 @@ export default class extends Phaser.State {
       0,
       32,
       this.game.width,
-      this.game.height
+      this.game.height - 32
     );
     this.game.add.existing(this.player);
     this.game.physics.arcade.enable(this.borders);
@@ -137,7 +137,7 @@ export default class extends Phaser.State {
 
   spawnEnemies() {
     if (this.game.time.now > spawnTimer) {
-      const directions = ["up"];
+      const directions = ["up", "down", "left", "right"];
       let randomDir = directions[Math.floor(Math.random() * directions.length)];
       let spawnLocation = this.getSpawnLocation(randomDir);
       const enemy = new Enemy({
@@ -164,11 +164,6 @@ export default class extends Phaser.State {
       setTimeout(() => resetTint(player), INVULN_RATE);
       invulnTimer = game.time.now + INVULN_RATE;
     }
-  }
-
-  destroyBullet(bullet) {
-    console.log("hud hit");
-    bullet.kill();
   }
 
   render() {

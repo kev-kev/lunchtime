@@ -10943,7 +10943,7 @@ const resetTint = sprite => {
       y: this.world.centerY,
       asset: "player"
     });
-    this.game.physics.arcade.setBounds(0, 32, this.game.width, this.game.height);
+    this.game.physics.arcade.setBounds(0, 32, this.game.width, this.game.height - 32);
     this.game.add.existing(this.player);
     this.game.physics.arcade.enable(this.borders);
     this.game.physics.arcade.enable(this.player);
@@ -11011,7 +11011,7 @@ const resetTint = sprite => {
 
   spawnEnemies() {
     if (this.game.time.now > spawnTimer) {
-      const directions = ["up"];
+      const directions = ["up", "down", "left", "right"];
       let randomDir = directions[Math.floor(Math.random() * directions.length)];
       let spawnLocation = this.getSpawnLocation(randomDir);
       const enemy = new __WEBPACK_IMPORTED_MODULE_2__sprites_Enemy__["a" /* default */]({
@@ -11038,11 +11038,6 @@ const resetTint = sprite => {
       setTimeout(() => resetTint(player), INVULN_RATE);
       invulnTimer = game.time.now + INVULN_RATE;
     }
-  }
-
-  destroyBullet(bullet) {
-    console.log("hud hit");
-    bullet.kill();
   }
 
   render() {

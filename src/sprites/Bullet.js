@@ -9,12 +9,13 @@ export default class extends Phaser.Sprite {
     this.game = game;
     this.frame = 13;
     this.health = health;
-    this.checkWorldBounds = true;
-    this.outOfBoundsKill = true;
   }
 
   update() {
-    // this.body.bounce = 1;
+    this.body.onWorldCollide = true;
+    if (this.body.checkWorldBounds()) {
+      this.destroy();
+    }
   }
 
   setVelocity(x, y) {

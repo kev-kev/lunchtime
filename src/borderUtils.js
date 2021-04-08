@@ -2,7 +2,7 @@ const getBorderData = (game) => {
   return [
     {
       x: 0,
-      y: 0,
+      y: 32,
       asset: "cBorder",
     },
     {
@@ -17,27 +17,27 @@ const getBorderData = (game) => {
     },
     {
       x: game.width - 32,
-      y: 0,
+      y: 32,
       asset: "cBorder",
     },
     {
       x: 32,
-      y: 0,
+      y: 32,
       asset: "xBorder",
     },
     {
       x: 128,
-      y: 0,
+      y: 32,
       asset: "xBorder",
     },
     {
       x: game.width - 128,
-      y: 0,
+      y: 32,
       asset: "xBorder",
     },
     {
       x: game.width - 224,
-      y: 0,
+      y: 32,
       asset: "xBorder",
     },
     {

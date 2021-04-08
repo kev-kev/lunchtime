@@ -21,22 +21,31 @@ export default class extends Phaser.State {
   preload() {}
 
   create() {
-    this.add.sprite(0, 0, "sky");
+    this.add.sprite(0, 32, "sky");
     this.borders = this.add.group();
+    this.hud = new Phaser.Rectangle(0, 0, this.game.width, 32);
     this.generateBorders();
     this.borders.enableBody = true;
     this.enemies = this.add.group();
     this.enemies.enableBody = true;
+    this.hud.enableBody = true;
     this.player = new Player({
       game: this.game,
       x: this.world.centerX,
       y: this.world.centerY,
       asset: "player",
     });
+    this.game.physics.arcade.setBounds(
+      0,
+      32,
+      this.game.width,
+      this.game.height
+    );
     this.game.add.existing(this.player);
     this.game.physics.arcade.enable(this.borders);
     this.game.physics.arcade.enable(this.player);
     this.game.physics.arcade.enable(this.enemies);
+    this.game.physics.arcade.enable(this.player.bullets);
   }
 
   generateBorders() {
@@ -68,6 +77,8 @@ export default class extends Phaser.State {
       null,
       this
     );
+    this.game.physics.arcade.collide(this.hud, this.player);
+    this.game.physics.arcade.collide(this.hud, this.enemies);
     this.game.physics.arcade.collide(this.enemies);
     this.game.physics.arcade.collide(this.player, this.borders);
     this.game.physics.arcade.collide(this.enemies, this.borders);
@@ -90,13 +101,12 @@ export default class extends Phaser.State {
   getSpawnLocation(dir) {
     switch (dir) {
       case "up":
-        console.log("up");
         return {
           x: getRandomNum(
             this.game.world.centerX - 140,
             this.game.world.centerX + 140
           ),
-          y: -30,
+          y: 60,
         };
       case "down":
         return {
@@ -104,11 +114,11 @@ export default class extends Phaser.State {
             this.game.world.centerX - 140,
             this.game.world.centerX + 140
           ),
-          y: this.game.height + 30,
+          y: this.game.height,
         };
       case "left":
         return {
-          x: -30,
+          x: 0,
           y: getRandomNum(
             this.game.world.centerY - 150,
             this.game.world.centerY + 150
@@ -116,7 +126,7 @@ export default class extends Phaser.State {
         };
       case "right":
         return {
-          x: this.game.width + 30,
+          x: this.game.width,
           y: getRandomNum(
             this.game.world.centerY - 150,
             this.game.world.centerY + 150
@@ -127,7 +137,7 @@ export default class extends Phaser.State {
 
   spawnEnemies() {
     if (this.game.time.now > spawnTimer) {
-      const directions = ["up", "down", "left", "right"];
+      const directions = ["up"];
       let randomDir = directions[Math.floor(Math.random() * directions.length)];
       let spawnLocation = this.getSpawnLocation(randomDir);
       const enemy = new Enemy({
@@ -156,6 +166,11 @@ export default class extends Phaser.State {
     }
   }
 
+  destroyBullet(bullet) {
+    console.log("hud hit");
+    bullet.kill();
+  }
+
   render() {
     if (__DEV__) {
       this.displayDebugInfo();
@@ -164,12 +179,12 @@ export default class extends Phaser.State {
 
   displayDebugInfo() {
     let enemy = this.enemies.getFirstAlive();
-    this.game.debug.start(32, 32);
-    enemy &&
-      this.game.debug.line(`Enemy Health: ${enemy.health}/${enemy.maxHealth}`);
+    this.game.debug.start(34, 96);
     this.player &&
       this.game.debug.line(
         `Player Health: ${this.player.health}/${this.player.maxHealth}`
       );
+    enemy &&
+      this.game.debug.line(`Enemy Health: ${enemy.health}/${enemy.maxHealth}`);
   }
 }

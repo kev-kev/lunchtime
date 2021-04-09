@@ -47,6 +47,7 @@ export default class extends Phaser.State {
       0,
       3
     );
+    this.load.spritesheet("heart", "assets/images/tileset_icons.png", 16, 16);
   }
 
   create() {

@@ -139,7 +139,6 @@ export default class extends Phaser.Sprite {
         health: 1,
       });
       this.bullets.add(bullet);
-      bullet.body.onWorldCollide = true;
       bullet.fire(dir);
       bulletTimer = game.time.now + FIRE_RATE;
     }

@@ -2,6 +2,7 @@ import Phaser from "phaser";
 import Player from "../sprites/Player";
 import Enemy from "../sprites/Enemy";
 import Border from "../sprites/Border";
+import Hud from "../sprites/Hud";
 import { getRandomNum } from "../utils";
 import { getBorderData, addBulletCollisions } from "../borderUtils";
 
@@ -23,12 +24,9 @@ export default class extends Phaser.State {
   create() {
     this.add.sprite(0, 32, "sky");
     this.borders = this.add.group();
-    this.hud = new Phaser.Rectangle(0, 0, this.game.width, 32);
     this.generateBorders();
-    this.borders.enableBody = true;
     this.enemies = this.add.group();
     this.enemies.enableBody = true;
-    this.hud.enableBody = true;
     this.player = new Player({
       game: this.game,
       x: this.world.centerX,
@@ -42,6 +40,7 @@ export default class extends Phaser.State {
       this.game.height - 32
     );
     this.game.add.existing(this.player);
+    this.hud = new Hud(this.game, this.player);
     this.game.physics.arcade.enable(this.borders);
     this.game.physics.arcade.enable(this.player);
     this.game.physics.arcade.enable(this.enemies);
@@ -77,8 +76,8 @@ export default class extends Phaser.State {
       null,
       this
     );
-    this.game.physics.arcade.collide(this.hud, this.player);
-    this.game.physics.arcade.collide(this.hud, this.enemies);
+    this.game.physics.arcade.collide(this.rectangle, this.player);
+    this.game.physics.arcade.collide(this.rectangle, this.enemies);
     this.game.physics.arcade.collide(this.enemies);
     this.game.physics.arcade.collide(this.player, this.borders);
     this.game.physics.arcade.collide(this.enemies, this.borders);

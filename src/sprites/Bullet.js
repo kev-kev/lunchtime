@@ -12,7 +12,7 @@ export default class extends Phaser.Sprite {
   }
 
   update() {
-    this.body.onWorldCollide = true;
+    this.body.collideWorldBounds = true;
     if (this.body.checkWorldBounds()) {
       this.destroy();
     }

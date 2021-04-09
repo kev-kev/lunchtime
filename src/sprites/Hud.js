@@ -8,11 +8,15 @@ export default class extends Phaser.Group {
     this.rectangle = new Phaser.Rectangle(0, 0, this.game.width, 32);
 
     for (let i = 0; i < this.player.maxHealth; i++) {
-      this.add(new Phaser.Sprite(this.game, 32 + 24 * i, 8, "heart", 1));
+      this.add(new Phaser.Sprite(this.game, 32 + 24 * i, 8, "hearts", 1));
     }
+    this.health = this.player.health;
   }
 
   update() {
-    // console.log(this.player);
+    if (this.health != this.player.health) {
+      this.children.pop();
+      this.health = this.player.health;
+    }
   }
 }

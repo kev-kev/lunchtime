@@ -10882,7 +10882,7 @@ if (window.cordova) {
     this.load.spritesheet("xBorder", "assets/images/borders.png", 48, 16);
     this.load.spritesheet("cBorder", "assets/images/borders.png", 16, 16, -1, 0, 0, 4);
     this.load.spritesheet("yBorder", "assets/images/borders.png", 16, 48, -1, 0, 0, 3);
-    this.load.spritesheet("heart", "assets/images/tileset_icons.png", 16, 16);
+    this.load.spritesheet("hearts", "assets/images/tileset_icons.png", 16, 16);
   }
 
   create() {
@@ -11331,12 +11331,16 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
     this.rectangle = new __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Rectangle(0, 0, this.game.width, 32);
 
     for (let i = 0; i < this.player.maxHealth; i++) {
-      this.add(new __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite(this.game, 32 + 24 * i, 8, "heart", 1));
+      this.add(new __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite(this.game, 32 + 24 * i, 8, "hearts", 1));
     }
+    this.health = this.player.health;
   }
 
   update() {
-    // console.log(this.player);
+    if (this.health != this.player.health) {
+      this.children.pop();
+      this.health = this.player.health;
+    }
   }
 });
 

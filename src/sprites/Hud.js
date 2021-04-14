@@ -5,17 +5,28 @@ export default class extends Phaser.Group {
     super(game);
     this.game = game;
     this.player = player;
-    this.rectangle = new Phaser.Rectangle(0, 0, this.game.width, 32);
 
-    for (let i = 0; i < this.player.maxHealth; i++) {
-      this.add(new Phaser.Sprite(this.game, 32 + 24 * i, 8, "hearts", 1));
+    this.hearts = new Phaser.Group(this.game);
+    for (let i = 0; i < this.player.health; i++) {
+      this.hearts.add(
+        new Phaser.Sprite(this.game, 32 + 24 * i, 8, "hearts", 1)
+      );
     }
     this.health = this.player.health;
+    this.score = new Phaser.Text(
+      this.game,
+      this.game.width - 92,
+      18,
+      "Score: 0"
+    );
+    this.add(this.score);
+    this.score.anchor.set(0.5);
+    this.score.addColor("#ffffff", 0);
   }
 
   update() {
     if (this.health != this.player.health) {
-      this.children.pop();
+      this.hearts.children.pop();
       this.health = this.player.health;
     }
   }

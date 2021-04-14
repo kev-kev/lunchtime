@@ -5,6 +5,7 @@ export default class extends Phaser.Group {
     super(game);
     this.game = game;
     this.player = player;
+    this.score = 0;
 
     this.hearts = new Phaser.Group(this.game);
     for (let i = 0; i < this.player.health; i++) {
@@ -13,15 +14,19 @@ export default class extends Phaser.Group {
       );
     }
     this.health = this.player.health;
-    this.score = new Phaser.Text(
+    this.scoreText = new Phaser.Text(
       this.game,
       this.game.width - 92,
       18,
-      "Score: 0"
+      `Score: ${this.score}`
     );
-    this.add(this.score);
-    this.score.anchor.set(0.5);
-    this.score.addColor("#ffffff", 0);
+    this.add(this.scoreText);
+    this.scoreText.anchor.set(0.5);
+    this.scoreText.addColor("#ffffff", 0);
+  }
+
+  addScore(num) {
+    this.scoreText.setText(`Score: ${(this.score += num)}`);
   }
 
   update() {

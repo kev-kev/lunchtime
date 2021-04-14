@@ -11029,6 +11029,9 @@ const resetTint = sprite => {
 
   hitEnemy(bullet, enemy) {
     enemy.damage(bullet.health);
+    if (enemy.health === 0) {
+      this.hud.addScore(100);
+    }
     bullet.kill();
   }
 
@@ -11241,7 +11244,7 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
     this.game = game;
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;
-    this.health = 12;
+    this.health = 1;
     this.maxHealth = 12;
     this.addAnimations();
   }
@@ -11305,7 +11308,6 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
 
   update() {
     this.body.immovable = true;
-    // this.body.bounce = 1;
   }
 });
 
@@ -11328,16 +11330,21 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
     super(game);
     this.game = game;
     this.player = player;
+    this.score = 0;
 
     this.hearts = new __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Group(this.game);
     for (let i = 0; i < this.player.health; i++) {
       this.hearts.add(new __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Sprite(this.game, 32 + 24 * i, 8, "hearts", 1));
     }
     this.health = this.player.health;
-    this.score = new __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Text(this.game, this.game.width - 92, 18, "Score: 0");
-    this.add(this.score);
-    this.score.anchor.set(0.5);
-    this.score.addColor("#ffffff", 0);
+    this.scoreText = new __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Text(this.game, this.game.width - 92, 18, `Score: ${this.score}`);
+    this.add(this.scoreText);
+    this.scoreText.anchor.set(0.5);
+    this.scoreText.addColor("#ffffff", 0);
+  }
+
+  addScore(num) {
+    this.scoreText.setText(`Score: ${this.score += num}`);
   }
 
   update() {

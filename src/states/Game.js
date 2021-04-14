@@ -153,6 +153,9 @@ export default class extends Phaser.State {
 
   hitEnemy(bullet, enemy) {
     enemy.damage(bullet.health);
+    if (enemy.health === 0) {
+      this.hud.addScore(100);
+    }
     bullet.kill();
   }
 

@@ -18,9 +18,6 @@ const resetTint = (sprite) => {
 };
 
 export default class extends Phaser.State {
-  init() {}
-  preload() {}
-
   create() {
     this.add.sprite(0, 32, "sky");
     this.borders = this.add.group();
@@ -40,7 +37,7 @@ export default class extends Phaser.State {
       this.game.height - 32
     );
     this.game.add.existing(this.player);
-    this.hud = new Hud(this.game, this.player);
+    this.hud = new Hud(this.game, this.player, this);
     this.game.physics.arcade.enable(this.borders);
     this.game.physics.arcade.enable(this.player);
     this.game.physics.arcade.enable(this.enemies);

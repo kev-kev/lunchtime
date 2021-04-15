@@ -10701,7 +10701,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__states_Boot__ = __webpack_require__(/*! ./states/Boot */ 340);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__states_Splash__ = __webpack_require__(/*! ./states/Splash */ 341);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__states_Game__ = __webpack_require__(/*! ./states/Game */ 342);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__config__ = __webpack_require__(/*! ./config */ 129);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__states_GameOver__ = __webpack_require__(/*! ./states/GameOver */ 349);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__config__ = __webpack_require__(/*! ./config */ 129);
+
 
 
 
@@ -10718,8 +10720,8 @@ class Game extends __WEBPACK_IMPORTED_MODULE_2_phaser___default.a.Game {
 
     // When game starts up, calculate the width and height of the game window based on config or
     // the window height.
-    const width = docElement.clientWidth > __WEBPACK_IMPORTED_MODULE_6__config__["a" /* default */].gameWidth ? __WEBPACK_IMPORTED_MODULE_6__config__["a" /* default */].gameWidth : docElement.clientWidth;
-    const height = docElement.clientHeight > __WEBPACK_IMPORTED_MODULE_6__config__["a" /* default */].gameHeight ? __WEBPACK_IMPORTED_MODULE_6__config__["a" /* default */].gameHeight : docElement.clientHeight;
+    const width = docElement.clientWidth > __WEBPACK_IMPORTED_MODULE_7__config__["a" /* default */].gameWidth ? __WEBPACK_IMPORTED_MODULE_7__config__["a" /* default */].gameWidth : docElement.clientWidth;
+    const height = docElement.clientHeight > __WEBPACK_IMPORTED_MODULE_7__config__["a" /* default */].gameHeight ? __WEBPACK_IMPORTED_MODULE_7__config__["a" /* default */].gameHeight : docElement.clientHeight;
 
     const gameConfig = {
       renderer: __WEBPACK_IMPORTED_MODULE_2_phaser___default.a.CANVAS,
@@ -10740,7 +10742,7 @@ class Game extends __WEBPACK_IMPORTED_MODULE_2_phaser___default.a.Game {
     this.state.add("Boot", __WEBPACK_IMPORTED_MODULE_3__states_Boot__["a" /* default */], false);
     this.state.add("Splash", __WEBPACK_IMPORTED_MODULE_4__states_Splash__["a" /* default */], false);
     this.state.add("Game", __WEBPACK_IMPORTED_MODULE_5__states_Game__["a" /* default */], false);
-
+    this.state.add("GameOver", __WEBPACK_IMPORTED_MODULE_6__states_GameOver__["a" /* default */], false);
     // with Cordova with need to wait that the device is ready so we will call the Boot state in another file
     if (!window.cordova) {
       this.state.start("Boot");
@@ -10868,8 +10870,6 @@ if (window.cordova) {
 
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.State {
-  init() {}
-
   preload() {
     this.loaderBg = this.add.sprite(this.game.world.centerX, this.game.world.centerY, "loaderBg");
     this.loaderBar = this.add.sprite(this.game.world.centerX, this.game.world.centerY, "loaderBar");
@@ -10928,9 +10928,6 @@ const resetTint = sprite => {
 };
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.State {
-  init() {}
-  preload() {}
-
   create() {
     this.add.sprite(0, 32, "sky");
     this.borders = this.add.group();
@@ -10945,7 +10942,7 @@ const resetTint = sprite => {
     });
     this.game.physics.arcade.setBounds(0, 32, this.game.width, this.game.height - 32);
     this.game.add.existing(this.player);
-    this.hud = new __WEBPACK_IMPORTED_MODULE_4__sprites_Hud__["a" /* default */](this.game, this.player);
+    this.hud = new __WEBPACK_IMPORTED_MODULE_4__sprites_Hud__["a" /* default */](this.game, this.player, this);
     this.game.physics.arcade.enable(this.borders);
     this.game.physics.arcade.enable(this.player);
     this.game.physics.arcade.enable(this.enemies);
@@ -11087,7 +11084,7 @@ let bulletTimer = 0;
     this.addAnimations();
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;
-    this.health = 3;
+    this.health = 1;
     this.maxHealth = 3;
   }
 
@@ -11326,11 +11323,12 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
 
 
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Group {
-  constructor(game, player) {
+  constructor(game, player, gameState) {
     super(game);
     this.game = game;
     this.player = player;
     this.score = 0;
+    this.gameState = gameState;
 
     this.hearts = new __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.Group(this.game);
     for (let i = 0; i < this.player.health; i++) {
@@ -11347,10 +11345,19 @@ const DIAGONAL_TOLERANCE = 0.8; // higher = stickier up/down movement animation
     this.scoreText.setText(`Score: ${this.score += num}`);
   }
 
+  gameOver() {
+    this.gameState.state.start("GameOver");
+  }
+
   update() {
     if (this.health != this.player.health) {
       this.hearts.children.pop();
       this.health = this.player.health;
+    }
+    if (this.player.health === 0) {
+      this.player.destroy();
+      this.gameOver();
+      this.player.health -= 1;
     }
   }
 });
@@ -11444,6 +11451,31 @@ const addBulletCollisions = (borders, bullets, game) => {
 };
 
 
+
+/***/ }),
+/* 348 */,
+/* 349 */
+/*!********************************!*\
+  !*** ./src/states/GameOver.js ***!
+  \********************************/
+/*! exports provided: default */
+/*! exports used: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser__ = __webpack_require__(/*! phaser */ 27);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_phaser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_phaser__);
+
+
+let ref = true;
+/* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.State {
+  render() {
+    if (ref) {
+      console.log("gameover screen");
+      ref = false;
+    }
+  }
+});
 
 /***/ })
 ],[132]);

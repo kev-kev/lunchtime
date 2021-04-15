@@ -14,7 +14,7 @@ export default class extends Phaser.Sprite {
     this.addAnimations();
     this.bullets = this.game.add.group();
     this.bullets.enableBody = true;
-    this.health = 3;
+    this.health = 1;
     this.maxHealth = 3;
   }
 

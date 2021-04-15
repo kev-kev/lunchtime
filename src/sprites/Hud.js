@@ -1,11 +1,12 @@
-import Phaser from "phaser";
+import Phaser, { StateManager } from "phaser";
 
 export default class extends Phaser.Group {
-  constructor(game, player) {
+  constructor(game, player, gameState) {
     super(game);
     this.game = game;
     this.player = player;
     this.score = 0;
+    this.gameState = gameState;
 
     this.hearts = new Phaser.Group(this.game);
     for (let i = 0; i < this.player.health; i++) {
@@ -29,10 +30,19 @@ export default class extends Phaser.Group {
     this.scoreText.setText(`Score: ${(this.score += num)}`);
   }
 
+  gameOver() {
+    this.gameState.state.start("GameOver");
+  }
+
   update() {
     if (this.health != this.player.health) {
       this.hearts.children.pop();
       this.health = this.player.health;
+    }
+    if (this.player.health === 0) {
+      this.player.destroy();
+      this.gameOver();
+      this.player.health -= 1;
     }
   }
 }

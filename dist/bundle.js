@@ -10827,8 +10827,8 @@ if (window.cordova) {
       });
     }
 
-    let text = this.add.text(this.world.centerX, this.world.centerY, "loading fonts", { font: "16px Arial", fill: "#dddddd", align: "center" });
-    text.anchor.setTo(0.5, 0.5);
+    const text = this.add.text(this.world.centerX, this.world.centerY, "loading fonts", { font: "16px Arial", fill: "#dddddd", align: "center" });
+    text.anchor.setTo(0.5);
     this.load.text(text);
     this.load.image("sky", "./assets/images/sky.png");
     this.load.image("loaderBar", "./assets/images/loader-bar.png");
@@ -11469,6 +11469,12 @@ const addBulletCollisions = (borders, bullets, game) => {
 
 let ref = true;
 /* harmony default export */ __webpack_exports__["a"] = (class extends __WEBPACK_IMPORTED_MODULE_0_phaser___default.a.State {
+  preload() {
+    const text = this.add.text(this.world.centerX, this.world.centerY, "Game Over", { font: "48px Arial", fill: "#ffffff", align: "center" });
+    text.anchor.setTo(0.5);
+    this.load.text(text);
+  }
+
   render() {
     if (ref) {
       console.log("gameover screen");

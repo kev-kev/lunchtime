@@ -7,22 +7,19 @@ export default class extends Phaser.State {
       this.world.centerX,
       this.world.centerY,
       "GAME OVER",
-      { font: "48px Arial", fill: "#ffffff", align: "center" }
+      { font: "48px Bangers", fill: "#ffffff", align: "center" }
     );
     text.anchor.setTo(0.5);
     this.load.text(text);
     const restartText = this.add.text(
       this.world.centerX,
       this.world.centerY + 64,
-      "RESTART",
-      { font: "32px Arial", fill: "#ffffff", align: "center" }
+      "RESTART?",
+      { font: "32px Bangers", fill: "#ffffff", align: "center" }
     );
     restartText.anchor.setTo(0.5);
     restartText.inputEnabled = true;
     restartText.events.onInputDown.add(down, this);
-    // restartText.events.onInputOver.add(over, this);
-    // restartText.events.onInputOut.add(out, this);
-    // restartText.events.onInputUp.add(up, this);
     this.load.text(restartText);
     function down() {
       this.state.start("Game");

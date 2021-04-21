@@ -8,7 +8,7 @@ import { getBorderData, addBulletCollisions } from "../borderUtils";
 
 let spawnTimer = 0;
 let invulnTimer = 0;
-const SPAWN_RATE = 4000;
+const SPAWN_RATE = 3000;
 const PRE_SPAWN_TIME = 2000; // ms before enemies begin spawning
 const INVULN_RATE = 1000; // bigger = more invuln on hit
 const DAMAGE_TINT = "0x8D4F6B";
